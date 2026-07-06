@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "maaden-cde",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start"],
+      "cwd": "C:\\XDH_Maaden\\RFQ Doc\\maaden-cde-sample",
+      "port": 3000
+    }
+  ]
+}
