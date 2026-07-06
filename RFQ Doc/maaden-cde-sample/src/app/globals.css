@@ -1,0 +1,317 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ported from docs/CDE Backbone - UI Layout.html — keep visual parity */
+:root {
+  --bg: #f4f3f0;
+  --panel: #ffffff;
+  --ink: #1f2024;
+  --muted: #6b6d76;
+  --gold: #c9a227;
+  --gold-dk: #9a7b1a;
+  --charcoal: #23242a;
+  --charcoal-2: #2e3038;
+  --ok: #2e7d32;
+  --warn: #b26a00;
+  --err: #c62828;
+  --line: #e3e1da;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+/* buttons */
+.btn {
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  cursor: pointer;
+}
+.btn.gold {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #fff;
+  font-weight: 600;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* cards & grids */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.kpi {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.kpi .v {
+  font-size: 26px;
+  font-weight: 700;
+}
+.kpi .l {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+.kpi .d {
+  font-size: 11px;
+  margin-top: 6px;
+}
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.grid31 {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 14px;
+}
+.two {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 14px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.card h3 {
+  font-size: 13px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  gap: 8px;
+}
+.card h3 .sub {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* chips */
+.chip {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.c-eqp { background: #fdf3d7; color: var(--gold-dk); }
+.c-str { background: #e3ecf5; color: #2c5f8a; }
+.c-ele { background: #eee6f5; color: #6a3d9a; }
+.c-mat { background: #e5f2e6; color: var(--ok); }
+.c-ok { background: #e5f2e6; color: var(--ok); }
+.c-warn { background: #fdf0dc; color: var(--warn); }
+.c-err { background: #fbe4e4; color: var(--err); }
+.c-info { background: #e8e8ec; color: #555; }
+
+/* tables */
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+table.data th {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 2px solid var(--line);
+}
+table.data td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--line);
+}
+table.data tr:hover td {
+  background: #faf9f6;
+}
+table.data.props td:first-child {
+  font-weight: 600;
+}
+.mono {
+  font-family: Consolas, monospace;
+  font-size: 12px;
+}
+.small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.badge-rev {
+  font-family: Consolas, monospace;
+  background: #eee;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 11px;
+}
+
+/* tree */
+.tree {
+  font-size: 12.5px;
+  line-height: 2;
+}
+.tree .n1 { font-weight: 600; }
+.tree .n2 { padding-left: 16px; color: #3a3c44; }
+.tree .n3 { padding-left: 32px; color: var(--muted); }
+.tree .n4 { padding-left: 48px; color: var(--muted); }
+.tree .sel {
+  background: #fdf3d7;
+  border-radius: 4px;
+  font-weight: 600;
+  color: var(--gold-dk);
+}
+
+/* bars */
+.bar {
+  height: 8px;
+  background: #ecebe6;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.bar i {
+  display: block;
+  height: 100%;
+  background: var(--gold);
+}
+.bar i.g { background: var(--ok); }
+.bar i.r { background: var(--err); }
+.bar i.o { background: var(--warn); }
+
+/* chain */
+.chain {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+.chain .node {
+  background: #fff;
+  border: 1.5px solid var(--gold);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 11.5px;
+  text-align: center;
+}
+.chain .node b {
+  display: block;
+  font-size: 12px;
+}
+.chain .arr {
+  color: var(--gold-dk);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* hub */
+.hub {
+  position: relative;
+  height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hub .core {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: var(--charcoal);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  z-index: 2;
+  border: 4px solid var(--gold);
+}
+.hub .core span {
+  font-size: 10px;
+  color: var(--gold);
+  font-weight: 400;
+}
+.sat {
+  position: absolute;
+  width: 118px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 9px 6px;
+  font-size: 10.5px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+.sat b {
+  display: block;
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+.sat .st {
+  font-size: 9.5px;
+}
+
+.note {
+  background: #fdf3d7;
+  border: 1px solid #ecd9a0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  margin-bottom: 14px;
+}
+.flowrow {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+.flowstep {
+  flex: 1;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 11.5px;
+  text-align: center;
+  background: #fbfaf7;
+}
+.flowstep b {
+  display: block;
+  font-size: 11px;
+  color: var(--gold-dk);
+  margin-bottom: 4px;
+}
+
+/* forms */
+.input {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12.5px;
+  background: #fff;
+}
+.input:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: -1px;
+}
