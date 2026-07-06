@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: maaden-cde-db
+    environment:
+      POSTGRES_USER: cde
+      POSTGRES_PASSWORD: cde_local_dev
+      POSTGRES_DB: maaden_cde
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cde -d maaden_cde"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:

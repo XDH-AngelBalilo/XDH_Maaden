@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maaden ARGP — CDE Asset Data Backbone — UI Layout</title>
+<style>
+:root{
+  --bg:#f4f3f0; --panel:#ffffff; --ink:#1f2024; --muted:#6b6d76;
+  --gold:#c9a227; --gold-dk:#9a7b1a; --charcoal:#23242a; --charcoal-2:#2e3038;
+  --ok:#2e7d32; --warn:#b26a00; --err:#c62828; --line:#e3e1da;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg);color:var(--ink);display:flex;min-height:100vh}
+/* sidebar */
+aside{width:230px;background:var(--charcoal);color:#d8d8dc;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
+.logo{padding:18px 16px;border-bottom:1px solid #3a3c44}
+.logo b{color:#fff;font-size:15px;letter-spacing:.5px}
+.logo span{display:block;font-size:11px;color:var(--gold);margin-top:2px}
+nav{flex:1;padding:10px 0}
+nav a{display:flex;align-items:center;gap:10px;padding:11px 16px;color:#c4c5cc;font-size:13px;cursor:pointer;border-left:3px solid transparent}
+nav a:hover{background:var(--charcoal-2)}
+nav a.active{background:var(--charcoal-2);color:#fff;border-left-color:var(--gold)}
+nav a .ic{width:18px;text-align:center;color:var(--gold)}
+.userbox{padding:12px 16px;border-top:1px solid #3a3c44;font-size:11px;color:#9a9ba3}
+.userbox b{color:#fff;display:block;font-size:12px}
+/* main */
+main{flex:1;min-width:0}
+header{background:var(--panel);border-bottom:1px solid var(--line);padding:12px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
+header h1{font-size:16px;font-weight:600}
+header .crumb{font-size:11px;color:var(--muted)}
+.hbtns{display:flex;gap:8px}
+.btn{padding:7px 14px;border-radius:6px;font-size:12px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:600}
+.wrap{padding:20px 24px;display:none}
+.wrap.show{display:block}
+/* cards & grids */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.kpi .v{font-size:26px;font-weight:700}
+.kpi .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.kpi .d{font-size:11px;margin-top:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid31{display:grid;grid-template-columns:300px 1fr;gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px}
+.card h3{font-size:13px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.card h3 .sub{font-size:11px;color:var(--muted);font-weight:400}
+/* chips */
+.chip{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:600}
+.c-eqp{background:#fdf3d7;color:var(--gold-dk)}
+.c-str{background:#e3ecf5;color:#2c5f8a}
+.c-ele{background:#eee6f5;color:#6a3d9a}
+.c-mat{background:#e5f2e6;color:var(--ok)}
+.c-ok{background:#e5f2e6;color:var(--ok)}
+.c-warn{background:#fdf0dc;color:var(--warn)}
+.c-err{background:#fbe4e4;color:var(--err)}
+.c-info{background:#e8e8ec;color:#555}
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:2px solid var(--line)}
+td{padding:9px 10px;border-bottom:1px solid var(--line)}
+tr:hover td{background:#faf9f6}
+.mono{font-family:Consolas,monospace;font-size:12px}
+/* tree */
+.tree{font-size:12.5px;line-height:2}
+.tree .n1{font-weight:600}
+.tree .n2{padding-left:16px;color:#3a3c44}
+.tree .n3{padding-left:32px;color:var(--muted)}
+.tree .n4{padding-left:48px;color:var(--muted)}
+.tree .sel{background:#fdf3d7;border-radius:4px;padding-left:16px;font-weight:600;color:var(--gold-dk)}
+/* bars */
+.bar{height:8px;background:#ecebe6;border-radius:6px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--gold)}
+.bar i.g{background:var(--ok)} .bar i.r{background:var(--err)} .bar i.o{background:var(--warn)}
+/* chain */
+.chain{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0}
+.chain .node{background:#fff;border:1.5px solid var(--gold);border-radius:8px;padding:8px 12px;font-size:11.5px;text-align:center}
+.chain .node b{display:block;font-size:12px}
+.chain .arr{color:var(--gold-dk);font-size:11px;font-weight:700}
+/* hub */
+.hub{position:relative;height:340px;display:flex;align-items:center;justify-content:center}
+.hub .core{width:130px;height:130px;border-radius:50%;background:var(--charcoal);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;z-index:2;border:4px solid var(--gold)}
+.hub .core span{font-size:10px;color:var(--gold);font-weight:400}
+.sat{position:absolute;width:118px;text-align:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 6px;font-size:10.5px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.sat b{display:block;font-size:11px;margin-bottom:2px}
+.sat .st{font-size:9.5px}
+.note{background:#fdf3d7;border:1px solid #ecd9a0;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:14px}
+.flowrow{display:flex;gap:10px;margin-top:8px}
+.flowstep{flex:1;border:1px dashed var(--line);border-radius:8px;padding:10px;font-size:11.5px;text-align:center;background:#fbfaf7}
+.flowstep b{display:block;font-size:11px;color:var(--gold-dk);margin-bottom:4px}
+.two{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+.props td:first-child{font-weight:600}
+.small{font-size:11px;color:var(--muted)}
+.badge-rev{font-family:Consolas,monospace;background:#eee;border-radius:4px;padding:1px 6px;font-size:11px}
+</style>
+</head>
+<body>
+<aside>
+  <div class="logo"><b>ARGP CDE</b><span>Module M1 — Asset Data Backbone · XD House</span></div>
+  <nav id="nav">
+    <a data-s="dash" class="active"><span class="ic">◧</span>Dashboard</a>
+    <a data-s="lib"><span class="ic">▤</span>Data Template Library</a>
+    <a data-s="reg"><span class="ic">⌗</span>Asset Registry</a>
+    <a data-s="det"><span class="ic">◈</span>Asset Detail</a>
+    <a data-s="comp"><span class="ic">✓</span>Compliance Centre</a>
+    <a data-s="pub"><span class="ic">⇄</span>Publish Hub</a>
+    <a data-s="gov"><span class="ic">⚙</span>Governance & Admin</a>
+  </nav>
+  <div class="userbox"><b>A. Balilo</b>Data Governance Lead · ARGP<br>Role: Admin ▾</div>
+</aside>
+<main>
+<header><div><h1 id="ttl">Dashboard</h1><div class="crumb">ARGP › Ar Rjum Gold Project › CDE</div></div>
+<div class="hbtns"><button class="btn">Export</button><button class="btn gold">+ Register Asset</button></div></header>
+
+<!-- DASHBOARD -->
+<div class="wrap show" id="dash">
+  <div class="kpis">
+    <div class="kpi"><div class="v">1,248</div><div class="l">Assets registered</div><div class="d"><span class="chip c-ok">▲ 62 this week</span></div></div>
+    <div class="kpi"><div class="v">87%</div><div class="l">Template coverage</div><div class="bar"><i style="width:87%"></i></div></div>
+    <div class="kpi"><div class="v">92.4%</div><div class="l">Compliance pass rate</div><div class="bar"><i class="g" style="width:92%"></i></div></div>
+    <div class="kpi"><div class="v">316</div><div class="l">Published assets</div><div class="d"><span class="chip c-info">6 target systems</span></div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Assets by lifecycle state <span class="sub">Area → Published</span></h3>
+      <table><tr><td>Registered</td><td>412</td><td style="width:45%"><div class="bar"><i style="width:33%"></i></div></td></tr>
+      <tr><td>Data Loaded</td><td>388</td><td><div class="bar"><i style="width:31%"></i></div></td></tr>
+      <tr><td>Validated</td><td>132</td><td><div class="bar"><i class="o" style="width:11%"></i></div></td></tr>
+      <tr><td>Published</td><td>316</td><td><div class="bar"><i class="g" style="width:25%"></i></div></td></tr></table>
+    </div>
+    <div class="card"><h3>Compliance findings by family <span class="sub">last validation run</span></h3>
+      <table><tr><td>Asset data framework</td><td><span class="chip c-err">14 fail</span></td><td class="small">missing mandatory props</td></tr>
+      <tr><td>Data quality</td><td><span class="chip c-warn">22 warn</span></td><td class="small">UoM &amp; range issues</td></tr>
+      <tr><td>Technical &amp; market</td><td><span class="chip c-err">6 fail</span></td><td class="small">values outside standard limits</td></tr></table>
+      <div class="note" style="margin:12px 0 0">⚠ 3 demo assets seeded to fail — see Compliance Centre.</div>
+    </div>
+  </div>
+  <div class="note">Roadmap alignment: this app = Module <b>M1 CDE + Engineering Data Hub</b> (Master Data Registry slice, task T-173) · Gate <b>G4 (W24)</b> evidence scope · stack per roadmap: Next.js + TypeScript + Tailwind + Postgres.</div>
+  <div class="card"><h3>The Data Template chain <span class="sub">client vision — image 3</span></h3>
+    <div class="chain">
+      <div class="node"><b>STANDARD</b>API 610 / Maaden spec</div><span class="arr">defines ▸</span>
+      <div class="node"><b>PRODUCT TYPE</b>Centrifugal Pump</div><span class="arr">defines ▸</span>
+      <div class="node"><b>PROPERTY SET</b>flow · head · power · material</div><span class="arr">defines ▸</span>
+      <div class="node"><b>DATA TEMPLATE</b>DT-EQP-PUMP-001 Rev A</div><span class="arr">instantiates ▸</span>
+      <div class="node" style="border-color:var(--charcoal)"><b>ASSET / TAG</b>EQP-000789 Rev A</div>
+    </div>
+  </div>
+</div>
+
+<!-- TEMPLATE LIBRARY -->
+<div class="wrap" id="lib">
+  <div class="grid31">
+    <div class="card"><h3>Standards › Product Types</h3>
+      <div class="tree">
+        <div class="n1">▾ API 610 — Centrifugal Pumps</div>
+        <div class="sel">▸ Centrifugal Pump (EQP)</div>
+        <div class="n3">▸ Vertical Turbine Pump</div>
+        <div class="n1">▾ ASME VIII — Pressure Vessels</div>
+        <div class="n2">▸ Vessel, Vertical (EQP)</div>
+        <div class="n1">▾ Maaden MCIS-STR-01</div>
+        <div class="n2">▸ Structural Steel Frame (STR)</div>
+        <div class="n2">▸ Cladding Panel (STR)</div>
+        <div class="n1">▾ IEC 61439 — LV Assemblies</div>
+        <div class="n2">▸ E-House / Switchroom (ELE)</div>
+        <div class="n1">▾ ASTM A240</div>
+        <div class="n2">▸ SS Plate Material (MAT)</div>
+      </div>
+    </div>
+    <div>
+      <div class="card"><h3>DT-EQP-PUMP-001 <span class="badge-rev">Rev A · Approved</span><span class="sub">defined by API 610 + Maaden P-SPEC-104</span></h3>
+        <table class="props"><tr><th>Property</th><th>Datatype</th><th>UoM</th><th>Mandatory</th><th>Validation rule</th></tr>
+          <tr><td>Flow rate</td><td>number</td><td>m³/h</td><td><span class="chip c-err">Yes</span></td><td class="mono">0 &lt; x ≤ 2000</td></tr>
+          <tr><td>Pressure (design)</td><td>number</td><td>bar</td><td><span class="chip c-err">Yes</span></td><td class="mono">≤ rating class</td></tr>
+          <tr><td>Power (absorbed)</td><td>number</td><td>kW</td><td><span class="chip c-err">Yes</span></td><td class="mono">≤ motor rated × 0.9</td></tr>
+          <tr><td>Material (casing)</td><td>enum</td><td>—</td><td><span class="chip c-err">Yes</span></td><td class="mono">∈ {SS316, SS304, CS, Duplex}</td></tr>
+          <tr><td>Asset class</td><td>enum</td><td>—</td><td><span class="chip c-err">Yes</span></td><td class="mono">= Pump Package</td></tr>
+          <tr><td>Seal plan</td><td>text</td><td>—</td><td><span class="chip c-info">No</span></td><td class="mono">API 682 plan code</td></tr>
+        </table>
+      </div>
+      <div class="card"><h3>Instances using this template <span class="sub">3 assets</span></h3>
+        <table><tr><th>Tag</th><th>Area</th><th>Rev</th><th>Status</th></tr>
+          <tr><td class="mono">EQP-000789</td><td>310 — CIL Circuit</td><td class="badge-rev">A</td><td><span class="chip c-ok">Published</span></td></tr>
+          <tr><td class="mono">EQP-000790</td><td>310 — CIL Circuit</td><td class="badge-rev">A</td><td><span class="chip c-warn">Validated</span></td></tr>
+          <tr><td class="mono">EQP-000811</td><td>220 — Grinding</td><td class="badge-rev">0</td><td><span class="chip c-info">Data Loaded</span></td></tr></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ASSET REGISTRY -->
+<div class="wrap" id="reg">
+  <div class="grid31">
+    <div class="card"><h3>Plant hierarchy <span class="sub">SoW 3.1.3</span></h3>
+      <div class="tree">
+        <div class="n1">▾ Area 100 — Crushing</div>
+        <div class="n1">▾ Area 220 — Grinding</div>
+        <div class="n2">▾ Unit 221 — Ball Mill</div>
+        <div class="n3">▸ Sys 221-ML — Mill Line</div>
+        <div class="n1">▾ Area 310 — CIL Circuit</div>
+        <div class="n2">▾ Unit 311 — Leach Tanks</div>
+        <div class="sel">▸ Sys 311-PU — Pumping</div>
+        <div class="n4">▸ Subsys 311-PU-01</div>
+        <div class="n1">▸ Area 410 — Elution</div>
+        <div class="n1">▸ Area 900 — Infrastructure</div>
+      </div>
+    </div>
+    <div class="card"><h3>Assets — Sys 311-PU · Pumping <span class="sub">filter: all classes · search ▭</span></h3>
+      <table><tr><th>Tag ID</th><th>Class</th><th>Product type</th><th>Template</th><th>Rev</th><th>Lifecycle</th><th>Compliance</th></tr>
+        <tr><td class="mono">EQP-000789</td><td><span class="chip c-eqp">EQP</span></td><td>Centrifugal Pump</td><td class="mono">DT-EQP-PUMP-001</td><td class="badge-rev">A</td><td><span class="chip c-ok">Published</span></td><td><span class="chip c-ok">Pass</span></td></tr>
+        <tr><td class="mono">ELE-000132</td><td><span class="chip c-ele">ELE</span></td><td>E-House Module</td><td class="mono">DT-ELE-EHSE-002</td><td class="badge-rev">C</td><td><span class="chip c-info">Data Loaded</span></td><td><span class="chip c-err">Framework fail</span></td></tr>
+        <tr><td class="mono">STR-000245</td><td><span class="chip c-str">STR</span></td><td>Steel Frame</td><td class="mono">DT-STR-FRAM-004</td><td class="badge-rev">B</td><td><span class="chip c-info">Data Loaded</span></td><td><span class="chip c-warn">Quality warn</span></td></tr>
+        <tr><td class="mono">MAT-000567</td><td><span class="chip c-mat">MAT</span></td><td>SS Plate</td><td class="mono">DT-MAT-PLAT-001</td><td class="badge-rev">D</td><td><span class="chip c-info">Data Loaded</span></td><td><span class="chip c-err">Technical fail</span></td></tr>
+        <tr><td class="mono">EQP-000790</td><td><span class="chip c-eqp">EQP</span></td><td>Centrifugal Pump</td><td class="mono">DT-EQP-PUMP-001</td><td class="badge-rev">A</td><td><span class="chip c-warn">Validated</span></td><td><span class="chip c-ok">Pass</span></td></tr></table>
+    </div>
+  </div>
+</div>
+
+<!-- ASSET DETAIL -->
+<div class="wrap" id="det">
+  <div class="note">Demo asset from client vision image 2 — the Pump Package with governed properties.</div>
+  <div class="two">
+    <div>
+      <div class="card"><h3>EQP-000789 — Pump Package <span class="badge-rev">Rev A</span><span class="sub">Area 310 › Unit 311 › Sys 311-PU · DT-EQP-PUMP-001</span></h3>
+        <table class="props"><tr><th>Property</th><th>Value</th><th>UoM</th><th>Source</th><th>vs Template</th></tr>
+          <tr><td>Flow rate</td><td>250</td><td>m³/h</td><td>Vendor datasheet</td><td><span class="chip c-ok">✓</span></td></tr>
+          <tr><td>Pressure</td><td>12</td><td>bar</td><td>Vendor datasheet</td><td><span class="chip c-ok">✓</span></td></tr>
+          <tr><td>Power</td><td>315</td><td>kW</td><td>Engineering</td><td><span class="chip c-ok">✓</span></td></tr>
+          <tr><td>Material</td><td>SS316</td><td>—</td><td>Vendor datasheet</td><td><span class="chip c-ok">✓</span></td></tr>
+          <tr><td>Asset class</td><td>Pump Package</td><td>—</td><td>Engineering</td><td><span class="chip c-ok">✓</span></td></tr>
+          <tr><td>Seal plan</td><td>Plan 53B</td><td>—</td><td>Vendor datasheet</td><td><span class="chip c-info">optional</span></td></tr>
+        </table>
+      </div>
+      <div class="card"><h3>Linked documents <span class="sub">CDE state per ISO 19650</span></h3>
+        <table><tr><th>Doc No</th><th>Type</th><th>Rev</th><th>CDE state</th></tr>
+          <tr><td class="mono">ARGP-310-DS-0789</td><td>Datasheet</td><td class="badge-rev">B</td><td><span class="chip c-ok">Published</span></td></tr>
+          <tr><td class="mono">ARGP-310-PID-031</td><td>P&amp;ID</td><td class="badge-rev">C</td><td><span class="chip c-ok">Shared</span></td></tr>
+          <tr><td class="mono">ARGP-310-ITP-114</td><td>ITP</td><td class="badge-rev">A</td><td><span class="chip c-warn">WIP</span></td></tr></table>
+      </div>
+    </div>
+    <div>
+      <div class="card"><h3>Validation status</h3>
+        <table><tr><td>Framework</td><td><span class="chip c-ok">Pass</span></td></tr>
+        <tr><td>Data quality</td><td><span class="chip c-ok">Pass</span></td></tr>
+        <tr><td>Technical &amp; market</td><td><span class="chip c-ok">Pass</span></td></tr></table>
+        <div class="small" style="margin-top:8px">Last run 06 Jul 2026 14:02 · rule set v1.3</div>
+      </div>
+      <div class="card"><h3>Revision history</h3>
+        <table><tr><td class="badge-rev">A</td><td class="small">Approved &amp; published — 28 Jun</td></tr>
+        <tr><td class="badge-rev">0</td><td class="small">IFR — vendor data loaded — 15 Jun</td></tr></table>
+      </div>
+      <div class="card"><h3>Publish status</h3>
+        <table><tr><td>Engineering Mgmt</td><td><span class="chip c-ok">Sent</span></td></tr>
+        <tr><td>Document Mgmt</td><td><span class="chip c-ok">Sent</span></td></tr>
+        <tr><td>Analytics</td><td><span class="chip c-ok">Sent</span></td></tr>
+        <tr><td>Ops DB</td><td><span class="chip c-info">Queued</span></td></tr></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLIANCE -->
+<div class="wrap" id="comp">
+  <div class="kpis">
+    <div class="kpi"><div class="v">92.4%</div><div class="l">Overall pass</div><div class="bar"><i class="g" style="width:92%"></i></div></div>
+    <div class="kpi"><div class="v">14</div><div class="l">Framework fails</div><div class="bar"><i class="r" style="width:20%"></i></div></div>
+    <div class="kpi"><div class="v">22</div><div class="l">Quality warnings</div><div class="bar"><i class="o" style="width:32%"></i></div></div>
+    <div class="kpi"><div class="v">6</div><div class="l">Technical fails</div><div class="bar"><i class="r" style="width:10%"></i></div></div>
+  </div>
+  <div class="card"><h3>Validation pipeline <span class="sub">client vision image 2 — 3 check families before DT use</span>
+    <button class="btn gold">▶ Run validation</button></h3>
+    <div class="flowrow">
+      <div class="flowstep"><b>STRUCTURE</b>Governance &amp; methodology → Asset data framework compliance</div>
+      <div class="flowstep"><b>PROCESS</b>Data structure → Data quality compliance</div>
+      <div class="flowstep"><b>CONTENT</b>Technical spec standards → Technical &amp; market compliance</div>
+      <div class="flowstep" style="border-style:solid;border-color:var(--gold)"><b>RESULT</b>Data Template certified → asset publishable</div>
+    </div>
+  </div>
+  <div class="card"><h3>Open findings</h3>
+    <table><tr><th>Asset</th><th>Family</th><th>Severity</th><th>Finding</th><th>Action</th></tr>
+      <tr><td class="mono">ELE-000132</td><td>Framework</td><td><span class="chip c-err">Fail</span></td><td>Mandatory property "Busbar rating" not populated</td><td><button class="btn">Fix</button></td></tr>
+      <tr><td class="mono">STR-000245</td><td>Data quality</td><td><span class="chip c-warn">Warn</span></td><td>UoM mismatch: length given in "ft", template requires "mm"</td><td><button class="btn">Fix</button></td></tr>
+      <tr><td class="mono">MAT-000567</td><td>Technical</td><td><span class="chip c-err">Fail</span></td><td>Yield strength 180 MPa &lt; ASTM A240 minimum (205 MPa)</td><td><button class="btn">Fix</button></td></tr>
+      <tr><td class="mono">EQP-000811</td><td>Framework</td><td><span class="chip c-warn">Warn</span></td><td>Tag not yet assigned to subsystem node</td><td><button class="btn">Fix</button></td></tr></table>
+  </div>
+</div>
+
+<!-- PUBLISH HUB -->
+<div class="wrap" id="pub">
+  <div class="note">Client vision image 4 — CDE at the centre, publishing governed asset data to 6 system families. Sample uses a publish simulator; production covers the 10 Master Roadmap integrations: Aconex · Primavera P6 · SAP S/4HANA · AVEVA PI · MS EPM · Azure AD · ADFS · SIEM · Outlook · ServiceNow.</div>
+  <div class="grid2">
+    <div class="card"><h3>Integration map</h3>
+      <div class="hub">
+        <div class="core">CDE<span>asset data backbone</span></div>
+        <div class="sat" style="top:0;left:14%"><b>Engineering Mgmt</b><span class="st chip c-ok">connected</span></div>
+        <div class="sat" style="top:0;right:14%"><b>Document Mgmt</b><span class="st chip c-ok">connected</span></div>
+        <div class="sat" style="top:40%;right:0"><b>Field &amp; Data Acq.</b><span class="st chip c-info">planned</span></div>
+        <div class="sat" style="bottom:0;right:14%"><b>Analytics &amp; Reporting</b><span class="st chip c-ok">connected</span></div>
+        <div class="sat" style="bottom:0;left:14%"><b>Geospatial &amp; Mine Planning</b><span class="st chip c-info">planned</span></div>
+        <div class="sat" style="top:40%;left:0"><b>Operational DBs</b><span class="st chip c-warn">queued</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="card"><h3>Publish queue &amp; events</h3>
+        <table><tr><th>Time</th><th>Asset</th><th>Target</th><th>Status</th></tr>
+          <tr><td class="small">14:22</td><td class="mono">EQP-000789</td><td>Analytics</td><td><span class="chip c-ok">Sent</span></td></tr>
+          <tr><td class="small">14:22</td><td class="mono">EQP-000789</td><td>Doc Mgmt</td><td><span class="chip c-ok">Sent</span></td></tr>
+          <tr><td class="small">14:20</td><td class="mono">EQP-000790</td><td>Eng Mgmt</td><td><span class="chip c-info">Queued</span></td></tr>
+          <tr><td class="small">13:55</td><td class="mono">STR-000245</td><td>—</td><td><span class="chip c-err">Blocked — compliance</span></td></tr></table>
+      </div>
+      <div class="card"><h3>API access <span class="sub">REST · OpenAPI · keys per SoW 3.4.4</span></h3>
+        <table><tr><td class="mono">GET /api/v1/assets/{tag}</td><td><span class="chip c-ok">live</span></td></tr>
+        <tr><td class="mono">GET /api/v1/templates/{code}</td><td><span class="chip c-ok">live</span></td></tr>
+        <tr><td class="mono">POST /api/v1/publish</td><td><span class="chip c-ok">live</span></td></tr></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GOVERNANCE -->
+<div class="wrap" id="gov">
+  <div class="grid2">
+    <div class="card"><h3>Approval workflow</h3>
+      <div class="flowrow">
+        <div class="flowstep"><b>DRAFT</b>Discipline engineer</div>
+        <div class="flowstep"><b>REVIEW</b>Lead + Data Governance</div>
+        <div class="flowstep"><b>APPROVED</b>Doc Controller records</div>
+        <div class="flowstep"><b>PUBLISHED</b>Downstream systems</div>
+      </div>
+      <div class="small" style="margin-top:10px">Any property change after Approved ⇒ new revision + re-validation (immutable audit, SoW 3.1.4).</div>
+    </div>
+    <div class="card"><h3>Roles (RBAC)</h3>
+      <table><tr><th>Role</th><th>Rights</th></tr>
+        <tr><td>Data Governance Lead</td><td class="small">templates, rules, approve</td></tr>
+        <tr><td>Discipline Engineer</td><td class="small">create/edit asset data</td></tr>
+        <tr><td>Document Controller</td><td class="small">docs, revisions, transmittals</td></tr>
+        <tr><td>Viewer / Downstream</td><td class="small">read + API</td></tr></table>
+      <div class="small" style="margin-top:8px">Production: Azure AD / ADFS SSO + MFA (SoW mandate).</div>
+    </div>
+  </div>
+  <div class="card"><h3>Standards register</h3>
+    <table><tr><th>Code</th><th>Title</th><th>Rev</th><th>Templates derived</th></tr>
+      <tr><td class="mono">API 610</td><td>Centrifugal Pumps for Petroleum Industry</td><td>12th</td><td>2</td></tr>
+      <tr><td class="mono">ASME VIII</td><td>Pressure Vessels Div.1</td><td>2023</td><td>1</td></tr>
+      <tr><td class="mono">MCIS-STR-01</td><td>Maaden Structural Standard</td><td>03</td><td>2</td></tr>
+      <tr><td class="mono">ASTM A240</td><td>SS Plate, Sheet &amp; Strip</td><td>24a</td><td>1</td></tr>
+      <tr><td class="mono">IEC 61439</td><td>LV Switchgear Assemblies</td><td>3.0</td><td>1</td></tr></table>
+  </div>
+  <div class="card"><h3>Audit trail (latest)</h3>
+    <table><tr><th>Time</th><th>User</th><th>Action</th></tr>
+      <tr><td class="small">14:22</td><td>system</td><td class="small">EQP-000789 published → Analytics (payload sha256:9f3a…)</td></tr>
+      <tr><td class="small">14:02</td><td>a.balilo</td><td class="small">Validation run v1.3 executed — 1,248 assets</td></tr>
+      <tr><td class="small">11:40</td><td>m.saad</td><td class="small">DT-EQP-PUMP-001 Rev A approved</td></tr></table>
+  </div>
+</div>
+</main>
+<script>
+const titles={dash:'Dashboard',lib:'Data Template Library',reg:'Asset Registry',det:'Asset Detail — EQP-000789',comp:'Compliance Centre',pub:'Publish Hub',gov:'Governance & Admin'};
+document.querySelectorAll('#nav a').forEach(a=>a.addEventListener('click',()=>{
+  document.querySelectorAll('#nav a').forEach(x=>x.classList.remove('active'));a.classList.add('active');
+  document.querySelectorAll('.wrap').forEach(w=>w.classList.remove('show'));
+  document.getElementById(a.dataset.s).classList.add('show');
+  document.getElementById('ttl').textContent=titles[a.dataset.s];window.scrollTo(0,0);
+}));
+</script>
+</body>
+</html>
