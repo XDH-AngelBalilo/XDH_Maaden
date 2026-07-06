@@ -88,8 +88,9 @@ INSERT INTO asset_property_values (asset_id,property_id,value,uom,source) VALUES
 -- EQP-000790 (passes)
 (2,1,'250','m3/h','vendor'),(2,2,'12','bar','vendor'),(2,3,'315','kW','engineering'),
 (2,4,'SS316',NULL,'vendor'),(2,5,'Pump Package',NULL,'engineering'),
--- EQP-000811 (incomplete on purpose — framework warn: no subsystem values yet)
-(3,1,'820','m3/h','engineering'),(3,2,'6','bar','engineering'),
+-- EQP-000811 (framework warn: assigned to System node, no Subsystem yet)
+(3,1,'820','m3/h','engineering'),(3,2,'6','bar','engineering'),(3,3,'450','kW','engineering'),
+(3,4,'SS316',NULL,'engineering'),(3,5,'Pump Package',NULL,'engineering'),
 -- ELE-000132: mandatory 'Busbar rating' MISSING → framework FAIL
 (4,8,'IP54',NULL,'vendor'),
 -- STR-000245: length in ft, template wants mm → quality WARN
