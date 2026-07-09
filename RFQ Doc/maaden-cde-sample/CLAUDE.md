@@ -56,8 +56,18 @@ A validation run writes `validation_runs` + `validation_findings`; asset lifecyc
 ## Publishing
 `publish_targets` seeds 10 systems grouped into 6 families (Engineering Mgmt, Document Mgmt, Field & Data Acq, Analytics & Reporting, Geospatial & Mine Planning, Operational DBs). Publishing an asset requires lifecycle = Validated + template status = Approved; writes one `publish_events` row per selected target with the full asset JSON payload and sha256 hash. Blocked publishes (compliance fails) must show in the queue as "Blocked — compliance".
 
+## Bilingual Arabic/English (S4+ requirement — competitive differentiator)
+The UI must be fully bilingual with a header toggle (عربي / EN), matching the toggle in `docs/CDE Backbone - UI Layout.html`:
+- **i18n approach:** lightweight dictionary (`src/lib/i18n/en.ts`, `ar.ts`) + React context; no heavy framework. Persist language choice in a cookie so SSR renders the correct language on first paint.
+- **RTL:** set `dir="rtl"` + `lang="ar"` on `<html>` when Arabic. Use Tailwind logical utilities (`ps-`, `pe-`, `ms-`, `me-`, `text-start/end`) instead of left/right so layout mirrors automatically. Sidebar active-border flips sides.
+- **Stays Latin/LTR always:** tag IDs (EQP-000789), template codes, revisions, hierarchy codes, units (m³/h, bar, kW), API paths, Western digits. Wrap them in `dir="ltr"` spans inside Arabic text.
+- **Arabic font:** `Tajawal` or `Cairo` via next/font with system fallback.
+- **Translate:** navigation, screen titles, KPI labels, table headers, lifecycle/status chips, buttons, validation family names, and finding messages (store message keys + params in findings, not prose, so both languages render).
+- **Dates:** Gregorian default; `ar-SA` locale formatting when Arabic. Hijri display is a Governance-settings nice-to-have, not required.
+- Reference dictionary: reuse the EN→AR map in the layout HTML's bottom `<script>` — authored for this project.
+
 ## Rules of engagement
-- Build order: S1 scaffold+DB → S2 API → S3 validation engine → S4 screens 1–4 → S5 screens 5–7 → S6 demo polish → S7 AI (only if asked).
+- Build order: S1 scaffold+DB → S2 API → S3 validation engine → S4 screens 1–4 (incl. i18n foundation + language toggle) → S5 screens 5–7 → S6 demo polish → S7 AI (only if asked).
 - Every mutation writes `audit_log` (who, what, before/after, timestamp). Approved data is immutable — changes create a new revision.
 - Seed must load idempotently: `npm run db:reset` drops, recreates, seeds.
 - Keep production notes out of the UI except where the layout HTML already shows them (e.g. Publish Hub note about 10 roadmap integrations).

@@ -2,10 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { makeT, type Locale } from "@/lib/i18n-dict";
 
-export default function RunValidationButton() {
+export default function RunValidationButton({
+  locale = "en",
+}: {
+  locale?: Locale;
+}) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const t = makeT(locale);
 
   async function run() {
     setBusy(true);
@@ -16,7 +22,7 @@ export default function RunValidationButton() {
 
   return (
     <button className="btn gold" onClick={run} disabled={busy}>
-      {busy ? "Running…" : "▶ Run validation"}
+      {busy ? t("btn.running") : t("btn.runValidation")}
     </button>
   );
 }

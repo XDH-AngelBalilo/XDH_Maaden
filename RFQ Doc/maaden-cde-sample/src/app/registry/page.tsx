@@ -4,6 +4,7 @@ import { ClassChip, LifecycleChip, ComplianceChip, Rev } from "@/components/ui";
 import { query } from "@/lib/db";
 import RegisterAssetButton from "@/components/RegisterAssetButton";
 import RegistryFilters from "@/components/RegistryFilters";
+import { tServer } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ export default async function Registry({
 }: {
   searchParams: { node?: string; class?: string; q?: string };
 }) {
+  const { locale, t } = tServer();
   const nodes = await query(
     `SELECT h.id, h.code, h.name, h.level, h.parent_id FROM cde.plant_hierarchy h ORDER BY h.code`
   );
@@ -76,7 +78,7 @@ export default async function Registry({
 
   return (
     <>
-      <PageHeader title="Asset Registry" actions={<RegisterAssetButton />} />
+      <PageHeader title={t("title.registry")} actions={<RegisterAssetButton />} />
       <div className="p-6">
         <div className="grid31">
           <div className="card">
@@ -115,13 +117,13 @@ export default async function Registry({
             <table className="data">
               <thead>
                 <tr>
-                  <th>Tag ID</th>
-                  <th>Class</th>
-                  <th>Product type</th>
-                  <th>Template</th>
-                  <th>Rev</th>
-                  <th>Lifecycle</th>
-                  <th>Compliance</th>
+                  <th>{t("th.tag")}</th>
+                  <th>{t("th.class")}</th>
+                  <th>{t("th.productType")}</th>
+                  <th>{t("th.template")}</th>
+                  <th>{t("th.rev")}</th>
+                  <th>{t("th.lifecycle")}</th>
+                  <th>{t("th.compliance")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -141,7 +143,7 @@ export default async function Registry({
                       <Rev rev={a.revision} />
                     </td>
                     <td>
-                      <LifecycleChip state={a.lifecycle} />
+                      <LifecycleChip state={a.lifecycle} locale={locale} />
                     </td>
                     <td>
                       {hasRuns ? (

@@ -4,10 +4,12 @@ import { Bar, SeverityChip } from "@/components/ui";
 import { query } from "@/lib/db";
 import { latestRun, openFindings } from "@/lib/validation";
 import RunValidationButton from "@/components/RunValidationButton";
+import { tServer } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
 export default async function Compliance() {
+  const { locale, t } = tServer();
   const run = await latestRun();
   const findings = run ? await openFindings(run.id) : [];
   const fams = (fam: string, sev: string) =>
@@ -18,7 +20,10 @@ export default async function Compliance() {
 
   return (
     <>
-      <PageHeader title="Compliance Centre" actions={<RunValidationButton />} />
+      <PageHeader
+        title={t("title.compliance")}
+        actions={<RunValidationButton locale={locale} />}
+      />
       <div className="p-6">
         <div className="kpis">
           <div className="kpi">

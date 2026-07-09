@@ -3,10 +3,13 @@ import PageHeader from "@/components/PageHeader";
 import { Bar } from "@/components/ui";
 import { query, queryOne } from "@/lib/db";
 import { latestRun } from "@/lib/validation";
+import { tServer } from "@/lib/i18n";
+import type { Lifecycle } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
 export default async function Dashboard() {
+  const { locale, t } = tServer();
   const counts = await queryOne(
     `SELECT
        (SELECT count(*)::int FROM cde.assets) AS assets,
@@ -39,13 +42,13 @@ export default async function Dashboard() {
       ) / 10
     : null;
 
-  const FAMILY_LABELS: Record<string, [string, string]> = {
-    framework: ["Asset data framework", "missing mandatory props / hierarchy"],
-    quality: ["Data quality", "UoM & range issues"],
-    technical: ["Technical & market", "values outside standard limits"],
+  const FAMILY_SUB: Record<string, string> = {
+    framework: "missing mandatory props / hierarchy",
+    quality: "UoM & range issues",
+    technical: "values outside standard limits",
   };
 
-  const states: [string, string | undefined][] = [
+  const states: [Lifecycle, string | undefined][] = [
     ["Registered", undefined],
     ["Data Loaded", undefined],
     ["Validated", "o"],
@@ -55,10 +58,10 @@ export default async function Dashboard() {
   return (
     <>
       <PageHeader
-        title="Dashboard"
+        title={t("dash.title")}
         actions={
           <Link href="/registry" className="btn gold">
-            + Register Asset
+            {t("btn.registerAsset")}
           </Link>
         }
       />
@@ -66,33 +69,33 @@ export default async function Dashboard() {
         <div className="kpis">
           <div className="kpi">
             <div className="v">{counts.assets.toLocaleString()}</div>
-            <div className="l">Assets registered</div>
+            <div className="l">{t("kpi.assets")}</div>
             <div className="d">
-              <span className="chip c-info">4 asset classes</span>
+              <span className="chip c-info">{t("kpi.assetClasses")}</span>
             </div>
           </div>
           <div className="kpi">
             <div className="v">{coverage}%</div>
-            <div className="l">Template coverage</div>
+            <div className="l">{t("kpi.coverage")}</div>
             <Bar pct={coverage} />
           </div>
           <div className="kpi">
             <div className="v">{passRate === null ? "—" : `${passRate}%`}</div>
-            <div className="l">Compliance pass rate</div>
+            <div className="l">{t("kpi.passRate")}</div>
             {passRate !== null ? (
               <Bar pct={passRate} tone={run.fail_count === 0 ? "g" : "o"} />
             ) : (
               <div className="d">
-                <span className="chip c-info">no run yet</span>
+                <span className="chip c-info">{t("kpi.noRun")}</span>
               </div>
             )}
           </div>
           <div className="kpi">
             <div className="v">{counts.published}</div>
-            <div className="l">Published assets</div>
+            <div className="l">{t("kpi.published")}</div>
             <div className="d">
               <span className="chip c-info">
-                {counts.target_families} target families
+                {counts.target_families} {t("kpi.targetFamilies")}
               </span>
             </div>
           </div>
@@ -101,13 +104,13 @@ export default async function Dashboard() {
         <div className="grid2">
           <div className="card">
             <h3>
-              Assets by lifecycle state <span className="sub">Registered → Published</span>
+              {t("dash.lifecycle")} <span className="sub">{t("dash.lifecycleSub")}</span>
             </h3>
             <table className="data">
               <tbody>
                 {states.map(([s, tone]) => (
                   <tr key={s}>
-                    <td>{s}</td>
+                    <td>{t(`lc.${s}`, s)}</td>
                     <td>{byState(s)}</td>
                     <td style={{ width: "45%" }}>
                       <Bar
@@ -122,7 +125,7 @@ export default async function Dashboard() {
           </div>
           <div className="card">
             <h3>
-              Compliance findings by family <span className="sub">last validation run</span>
+              {t("dash.findings")} <span className="sub">{t("dash.lastRun")}</span>
             </h3>
             {run ? (
               <table className="data">
@@ -133,19 +136,23 @@ export default async function Dashboard() {
                     const warns = f?.warns ?? 0;
                     return (
                       <tr key={fam}>
-                        <td>{FAMILY_LABELS[fam][0]}</td>
+                        <td>{t(`fam.${fam}`)}</td>
                         <td>
                           {fails > 0 && (
-                            <span className="chip c-err">{fails} fail</span>
+                            <span className="chip c-err">
+                              {fails} {t("st.fail")}
+                            </span>
                           )}{" "}
                           {warns > 0 && (
-                            <span className="chip c-warn">{warns} warn</span>
+                            <span className="chip c-warn">
+                              {warns} {t("st.warn")}
+                            </span>
                           )}
                           {fails === 0 && warns === 0 && (
-                            <span className="chip c-ok">clear</span>
+                            <span className="chip c-ok">{t("st.clear")}</span>
                           )}
                         </td>
-                        <td className="small">{FAMILY_LABELS[fam][1]}</td>
+                        <td className="small">{FAMILY_SUB[fam]}</td>
                       </tr>
                     );
                   })}
@@ -153,15 +160,13 @@ export default async function Dashboard() {
               </table>
             ) : (
               <div className="small">
-                No validation run yet — go to the{" "}
                 <Link href="/compliance" className="underline">
-                  Compliance Centre
-                </Link>{" "}
-                and run validation.
+                  {t("nav.compliance")}
+                </Link>
               </div>
             )}
             <div className="note" style={{ margin: "12px 0 0" }}>
-              ⚠ 3 demo assets seeded to fail — see Compliance Centre.
+              {t("dash.demoNote")}
             </div>
           </div>
         </div>

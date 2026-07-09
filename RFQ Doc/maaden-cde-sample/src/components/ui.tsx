@@ -1,4 +1,5 @@
 import type { AssetClass, Lifecycle, Severity, CdeState } from "@/lib/types";
+import { makeT, type Locale } from "@/lib/i18n-dict";
 
 const CLASS_CHIP: Record<AssetClass, string> = {
   EQP: "c-eqp",
@@ -18,8 +19,15 @@ const LIFECYCLE_CHIP: Record<Lifecycle, string> = {
   Published: "c-ok",
 };
 
-export function LifecycleChip({ state }: { state: Lifecycle }) {
-  return <span className={`chip ${LIFECYCLE_CHIP[state]}`}>{state}</span>;
+export function LifecycleChip({
+  state,
+  locale = "en",
+}: {
+  state: Lifecycle;
+  locale?: Locale;
+}) {
+  const label = makeT(locale)(`lc.${state}`, state);
+  return <span className={`chip ${LIFECYCLE_CHIP[state]}`}>{label}</span>;
 }
 
 const CDE_CHIP: Record<CdeState, string> = {

@@ -2,6 +2,7 @@ import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import { Rev, LifecycleChip } from "@/components/ui";
 import { query, queryOne } from "@/lib/db";
+import { tServer } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -79,7 +80,7 @@ export default async function TemplateLibrary({
 
   return (
     <>
-      <PageHeader title="Data Template Library" />
+      <PageHeader title={tServer().t("title.templates")} />
       <div className="p-6">
         <div className="grid31">
           <div className="card">

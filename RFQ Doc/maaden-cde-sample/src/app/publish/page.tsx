@@ -2,6 +2,7 @@ import PageHeader from "@/components/PageHeader";
 import { query } from "@/lib/db";
 import PublishPanel from "@/components/PublishPanel";
 import PublishQueue from "@/components/PublishQueue";
+import { tServer } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -43,7 +44,7 @@ export default async function PublishHub() {
 
   return (
     <>
-      <PageHeader title="Publish Hub" />
+      <PageHeader title={tServer().t("title.publish")} />
       <div className="p-6">
         <div className="note">
           Client vision image 4 — CDE at the centre, publishing governed asset data

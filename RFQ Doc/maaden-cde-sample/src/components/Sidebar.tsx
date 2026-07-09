@@ -4,22 +4,16 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import type { SessionUser } from "@/lib/auth";
+import { makeT, type Locale } from "@/lib/i18n-dict";
 
 const NAV = [
-  { href: "/", icon: "◧", label: "Dashboard" },
-  { href: "/templates", icon: "▤", label: "Data Template Library" },
-  { href: "/registry", icon: "⌗", label: "Asset Registry" },
-  { href: "/compliance", icon: "✓", label: "Compliance Centre" },
-  { href: "/publish", icon: "⇄", label: "Publish Hub" },
-  { href: "/governance", icon: "⚙", label: "Governance & Admin" },
+  { href: "/", icon: "◧", key: "nav.dash" },
+  { href: "/templates", icon: "▤", key: "nav.templates" },
+  { href: "/registry", icon: "⌗", key: "nav.registry" },
+  { href: "/compliance", icon: "✓", key: "nav.compliance" },
+  { href: "/publish", icon: "⇄", key: "nav.publish" },
+  { href: "/governance", icon: "⚙", key: "nav.governance" },
 ];
-
-const ROLE_LABELS: Record<string, string> = {
-  governance_lead: "Data Governance Lead",
-  engineer: "Discipline Engineer",
-  doc_controller: "Document Controller",
-  viewer: "Viewer / Downstream",
-};
 
 const USERS = [
   { username: "a.balilo", label: "A. Balilo — Governance Lead" },
@@ -28,20 +22,38 @@ const USERS = [
   { username: "viewer", label: "Viewer" },
 ];
 
-export default function Sidebar({ user }: { user: SessionUser }) {
+export default function Sidebar({
+  user,
+  locale,
+}: {
+  user: SessionUser;
+  locale: Locale;
+}) {
   const pathname = usePathname();
   const router = useRouter();
-  const [switching, setSwitching] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const t = makeT(locale);
 
   async function switchUser(username: string) {
     if (username === user.username) return;
-    setSwitching(true);
+    setBusy(true);
     await fetch("/api/v1/auth/switch", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username }),
     });
-    setSwitching(false);
+    setBusy(false);
+    router.refresh();
+  }
+
+  async function toggleLocale() {
+    setBusy(true);
+    await fetch("/api/v1/locale", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ locale: locale === "ar" ? "en" : "ar" }),
+    });
+    setBusy(false);
     router.refresh();
   }
 
@@ -50,12 +62,15 @@ export default function Sidebar({ user }: { user: SessionUser }) {
     return pathname.startsWith(href);
   }
 
+  const borderSide = locale === "ar" ? "border-r-[3px]" : "border-l-[3px]";
+  const borderClear = locale === "ar" ? "border-r-transparent" : "border-l-transparent";
+
   return (
     <aside className="w-[230px] bg-charcoal text-[#d8d8dc] flex flex-col flex-shrink-0 sticky top-0 h-screen">
       <div className="px-4 py-[18px] border-b border-[#3a3c44]">
-        <b className="text-white text-[15px] tracking-[.5px]">ARGP CDE</b>
+        <b className="text-white text-[15px] tracking-[.5px]">{t("app.brand")}</b>
         <span className="block text-[11px] text-gold mt-[2px]">
-          Module M1 — Asset Data Backbone · XD House
+          {t("app.tagline")}
         </span>
       </div>
       <nav className="flex-1 py-[10px]">
@@ -63,24 +78,24 @@ export default function Sidebar({ user }: { user: SessionUser }) {
           <Link
             key={n.href}
             href={n.href}
-            className={`flex items-center gap-[10px] px-4 py-[11px] text-[13px] border-l-[3px] ${
+            className={`flex items-center gap-[10px] px-4 py-[11px] text-[13px] ${borderSide} ${
               isActive(n.href)
-                ? "bg-charcoal-2 text-white border-gold"
-                : "text-[#c4c5cc] border-transparent hover:bg-charcoal-2"
+                ? `bg-charcoal-2 text-white ${locale === "ar" ? "border-r-gold" : "border-l-gold"}`
+                : `text-[#c4c5cc] ${borderClear} hover:bg-charcoal-2`
             }`}
           >
             <span className="w-[18px] text-center text-gold">{n.icon}</span>
-            {n.label}
+            {t(n.key)}
           </Link>
         ))}
       </nav>
       <div className="px-4 py-3 border-t border-[#3a3c44] text-[11px] text-[#9a9ba3]">
         <b className="text-white block text-[12px]">{user.display_name}</b>
-        {ROLE_LABELS[user.role]} · ARGP
+        {t(`role.${user.role}`)} · ARGP
         <select
           className="mt-2 w-full bg-charcoal-2 text-[#d8d8dc] text-[11px] rounded px-2 py-1 border border-[#3a3c44]"
           value={user.username}
-          disabled={switching}
+          disabled={busy}
           onChange={(e) => switchUser(e.target.value)}
         >
           {USERS.map((u) => (
@@ -89,6 +104,13 @@ export default function Sidebar({ user }: { user: SessionUser }) {
             </option>
           ))}
         </select>
+        <button
+          className="mt-2 w-full bg-charcoal-2 text-gold text-[11px] rounded px-2 py-1 border border-[#3a3c44] hover:text-white"
+          disabled={busy}
+          onClick={toggleLocale}
+        >
+          🌐 {t("lang.toggle")}
+        </button>
       </div>
     </aside>
   );

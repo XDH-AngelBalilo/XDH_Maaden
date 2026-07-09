@@ -1,6 +1,8 @@
 # Maaden ARGP — CDE Asset Data Backbone
 ## Implementation Plan & Layout (Localhost Sample → Production Path)
 
+> **CLASSIFICATION: XDH INTERNAL — do not issue to client.** Contains commercial notes (§0). Client-facing companion: `ARGP CDE - Vision Alignment Brief.docx`.
+
 **Ref:** ARGP-DIGI-APP-SOW-001 Rev. 00 | Master Roadmap XDH-AE-Q26-05-00030 v1.0 (02 Jul 2026) | XDH-AE-Q26-05-00029
 **Date:** 2026-07-06 (rev 1 — aligned to Master Roadmap) | **Prepared by:** XD House
 **Source:** Client vision diagrams (4 images) + SoW + Master Roadmap deck & workbook
@@ -138,6 +140,8 @@ Production companions (roadmap slide 11, M2/M3-scoped, not in this sample): Prog
 7. **Governance / Admin** — roles, Draft→Review→Approved workflow, audit trail, standards register.
 
 Design language: Maaden-adjacent palette (charcoal + gold ochre), data-dense tables, status chips.
+
+**Bilingual Arabic/English (differentiator):** full عربي/EN toggle with RTL mirroring — live in the layout wireframe and specified in CLAUDE.md for the build. Engineering identifiers (tags, codes, units) remain Latin/LTR inside Arabic text per industry practice. The SoW anticipates additional languages "prior to the final UI design phase"; demoing Arabic-first supports Maaden's Vision 2030 local-content narrative and is something incumbent demos are unlikely to show.
 
 ---
 

@@ -92,6 +92,14 @@ tr:hover td{background:#faf9f6}
 .props td:first-child{font-weight:600}
 .small{font-size:11px;color:var(--muted)}
 .badge-rev{font-family:Consolas,monospace;background:#eee;border-radius:4px;padding:1px 6px;font-size:11px}
+/* RTL (Arabic) support */
+[dir="rtl"] nav a{border-left:none;border-right:3px solid transparent}
+[dir="rtl"] nav a.active{border-right-color:var(--gold)}
+[dir="rtl"] th,[dir="rtl"] td{text-align:right}
+[dir="rtl"] .tree .n2,[dir="rtl"] .tree .sel{padding-left:0;padding-right:16px}
+[dir="rtl"] .tree .n3{padding-left:0;padding-right:32px}
+[dir="rtl"] .tree .n4{padding-left:0;padding-right:48px}
+.mono,.badge-rev{direction:ltr;unicode-bidi:embed;display:inline-block}
 </style>
 </head>
 <body>
@@ -110,7 +118,7 @@ tr:hover td{background:#faf9f6}
 </aside>
 <main>
 <header><div><h1 id="ttl">Dashboard</h1><div class="crumb">ARGP › Ar Rjum Gold Project › CDE</div></div>
-<div class="hbtns"><button class="btn">Export</button><button class="btn gold">+ Register Asset</button></div></header>
+<div class="hbtns"><button class="btn" id="langBtn" style="font-weight:600">عربي</button><button class="btn">Export</button><button class="btn gold">+ Register Asset</button></div></header>
 
 <!-- DASHBOARD -->
 <div class="wrap show" id="dash">
@@ -354,11 +362,48 @@ tr:hover td{background:#faf9f6}
 </main>
 <script>
 const titles={dash:'Dashboard',lib:'Data Template Library',reg:'Asset Registry',det:'Asset Detail — EQP-000789',comp:'Compliance Centre',pub:'Publish Hub',gov:'Governance & Admin'};
+const titlesAr={dash:'لوحة المعلومات',lib:'مكتبة قوالب البيانات',reg:'سجل الأصول',det:'تفاصيل الأصل — EQP-000789',comp:'مركز الامتثال',pub:'مركز النشر',gov:'الحوكمة والإدارة'};
+// EN -> AR dictionary (engineering tags, codes and units stay Latin)
+const AR={
+'Dashboard':'لوحة المعلومات','Data Template Library':'مكتبة قوالب البيانات','Asset Registry':'سجل الأصول','Asset Detail':'تفاصيل الأصل','Compliance Centre':'مركز الامتثال','Publish Hub':'مركز النشر','Governance & Admin':'الحوكمة والإدارة',
+'Assets registered':'الأصول المسجّلة','Template coverage':'تغطية القوالب','Compliance pass rate':'نسبة اجتياز الامتثال','Published assets':'الأصول المنشورة',
+'Assets by lifecycle state':'الأصول حسب حالة دورة الحياة','Compliance findings by family':'ملاحظات الامتثال حسب الفئة','The Data Template chain':'سلسلة قالب البيانات',
+'Registered':'مسجّل','Data Loaded':'البيانات محمّلة','Validated':'تم التحقق','Published':'منشور','Sent':'أُرسل','Queued':'في الانتظار','Pass':'اجتياز','Fail':'إخفاق','Warn':'تحذير','fail':'إخفاق','warn':'تحذير','connected':'متصل','planned':'مخطط','queued':'في الانتظار','optional':'اختياري','live':'مباشر',
+'STANDARD':'المعيار','PRODUCT TYPE':'نوع المنتج','PROPERTY SET':'مجموعة الخصائص','DATA TEMPLATE':'قالب البيانات','ASSET / TAG':'الأصل / الوسم','defines ▸':'يُعرِّف ▸','instantiates ▸':'يُنشئ ▸',
+'Standards › Product Types':'المعايير › أنواع المنتجات','Plant hierarchy':'التسلسل الهرمي للمنشأة','Assets — Sys 311-PU · Pumping':'الأصول — نظام 311-PU · الضخ','Instances using this template':'الأصول المستخدمة لهذا القالب',
+'Property':'الخاصية','Datatype':'نوع البيانات','UoM':'وحدة القياس','Mandatory':'إلزامي','Validation rule':'قاعدة التحقق','Value':'القيمة','Source':'المصدر','vs Template':'مقابل القالب',
+'Tag':'الوسم','Tag ID':'معرّف الوسم','Class':'الفئة','Product type':'نوع المنتج','Template':'القالب','Rev':'المراجعة','Status':'الحالة','Lifecycle':'دورة الحياة','Compliance':'الامتثال','Area':'المنطقة',
+'Linked documents':'الوثائق المرتبطة','Doc No':'رقم الوثيقة','Type':'النوع','CDE state':'حالة بيئة البيانات','Validation status':'حالة التحقق','Revision history':'سجل المراجعات','Publish status':'حالة النشر',
+'Framework':'الإطار','Data quality':'جودة البيانات','Technical & market':'الفني والسوقي','Framework fails':'إخفاقات الإطار','Quality warnings':'تحذيرات الجودة','Technical fails':'إخفاقات فنية','Overall pass':'الاجتياز الكلي','Framework fail':'إخفاق الإطار','Quality warn':'تحذير جودة','Technical fail':'إخفاق فني',
+'Validation pipeline':'مسار التحقق','Open findings':'الملاحظات المفتوحة','Asset':'الأصل','Family':'الفئة','Severity':'الخطورة','Finding':'الملاحظة','Action':'الإجراء','Fix':'معالجة','▶ Run validation':'▶ تشغيل التحقق',
+'Integration map':'خريطة التكامل','Publish queue & events':'قائمة النشر والأحداث','Time':'الوقت','Target':'الوجهة','API access':'الوصول عبر واجهات البرمجة',
+'Engineering Mgmt':'إدارة الهندسة','Document Mgmt':'إدارة الوثائق','Field & Data Acq.':'الاستحواذ الميداني للبيانات','Analytics & Reporting':'التحليلات والتقارير','Geospatial & Mine Planning':'الجيومكانية وتخطيط المنجم','Operational DBs':'قواعد البيانات التشغيلية','asset data backbone':'العمود الفقري لبيانات الأصول',
+'Approval workflow':'مسار الاعتماد','Roles (RBAC)':'الأدوار والصلاحيات','Standards register':'سجل المعايير','Audit trail (latest)':'سجل التدقيق (الأحدث)','Role':'الدور','Rights':'الصلاحيات','User':'المستخدم','Code':'الرمز','Title':'العنوان','Templates derived':'القوالب المشتقة',
+'DRAFT':'مسودة','REVIEW':'مراجعة','APPROVED':'معتمد','PUBLISHED':'منشور','RESULT':'النتيجة','STRUCTURE':'الهيكل','PROCESS':'العملية','CONTENT':'المحتوى',
+'Export':'تصدير','+ Register Asset':'+ تسجيل أصل','Data Governance Lead':'قائد حوكمة البيانات','Discipline Engineer':'مهندس التخصص','Document Controller':'مراقب الوثائق','Viewer / Downstream':'مطالِع / الأنظمة اللاحقة',
+'Flow rate':'معدل التدفق','Pressure':'الضغط','Pressure (design)':'الضغط (التصميمي)','Power':'القدرة','Power (absorbed)':'القدرة (الممتصة)','Material':'المادة','Material (casing)':'مادة الغلاف','Asset class':'فئة الأصل','Seal plan':'مخطط الإحكام',
+'Yes':'نعم','No':'لا','Vendor datasheet':'ورقة بيانات المورد','Engineering':'الهندسة','Datasheet':'ورقة بيانات','ITP':'خطة الفحص والاختبار','Total':'الإجمالي'
+};
+const AR2EN={}; for(const k in AR) AR2EN[AR[k]]=k;
+let lang='en';
+function walk(map){
+  const it=document.createNodeIterator(document.body,NodeFilter.SHOW_TEXT);
+  let n; while(n=it.nextNode()){ const t=n.nodeValue.trim(); if(t && map[t]) n.nodeValue=n.nodeValue.replace(t,map[t]); }
+}
+document.getElementById('langBtn').addEventListener('click',()=>{
+  lang = lang==='en' ? 'ar' : 'en';
+  document.documentElement.setAttribute('dir', lang==='ar' ? 'rtl' : 'ltr');
+  document.documentElement.setAttribute('lang', lang);
+  walk(lang==='ar' ? AR : AR2EN);
+  document.getElementById('langBtn').textContent = lang==='ar' ? 'EN' : 'عربي';
+  const act=document.querySelector('#nav a.active').dataset.s;
+  document.getElementById('ttl').textContent=(lang==='ar'?titlesAr:titles)[act];
+});
 document.querySelectorAll('#nav a').forEach(a=>a.addEventListener('click',()=>{
   document.querySelectorAll('#nav a').forEach(x=>x.classList.remove('active'));a.classList.add('active');
   document.querySelectorAll('.wrap').forEach(w=>w.classList.remove('show'));
   document.getElementById(a.dataset.s).classList.add('show');
-  document.getElementById('ttl').textContent=titles[a.dataset.s];window.scrollTo(0,0);
+  document.getElementById('ttl').textContent=(lang==='ar'?titlesAr:titles)[a.dataset.s];window.scrollTo(0,0);
 }));
 </script>
 </body>

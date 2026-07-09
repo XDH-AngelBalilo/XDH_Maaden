@@ -2,6 +2,7 @@ import PageHeader from "@/components/PageHeader";
 import { query } from "@/lib/db";
 import { getSession, canApprove } from "@/lib/auth";
 import TemplateStatusControl from "@/components/TemplateStatusControl";
+import { tServer } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +26,7 @@ export default async function Governance() {
 
   return (
     <>
-      <PageHeader title="Governance & Admin" />
+      <PageHeader title={tServer().t("title.governance")} />
       <div className="p-6">
         <div className="grid2">
           <div className="card">

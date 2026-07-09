@@ -315,3 +315,12 @@ table.data.props td:first-child {
   outline: 2px solid var(--gold);
   outline-offset: -1px;
 }
+
+/* RTL (Arabic) — flip tree indentation to the right edge */
+[dir="rtl"] .tree .n2 { padding-left: 0; padding-right: 16px; }
+[dir="rtl"] .tree .n3 { padding-left: 0; padding-right: 32px; }
+[dir="rtl"] .tree .n4 { padding-left: 0; padding-right: 48px; }
+[dir="rtl"] .tree .sel { padding-left: 0; padding-right: 16px; }
+/* keep data tables and monospace tags left-aligned (tag IDs, codes are LTR) */
+[dir="rtl"] .mono { direction: ltr; unicode-bidi: embed; display: inline-block; }
+[dir="rtl"] table.data th { text-align: right; }
