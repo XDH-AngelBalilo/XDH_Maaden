@@ -25,6 +25,7 @@ const DICT: Dict = {
   "nav.compliance": { en: "Compliance Centre", ar: "مركز الامتثال" },
   "nav.publish": { en: "Publish Hub", ar: "مركز النشر" },
   "nav.governance": { en: "Governance & Admin", ar: "الحوكمة والإدارة" },
+  "nav.ai": { en: "AI Assistant", ar: "المساعد الذكي" },
 
   "role.governance_lead": { en: "Data Governance Lead", ar: "قائد حوكمة البيانات" },
   "role.engineer": { en: "Discipline Engineer", ar: "مهندس تخصص" },
@@ -82,6 +83,43 @@ const DICT: Dict = {
   "title.compliance": { en: "Compliance Centre", ar: "مركز الامتثال" },
   "title.publish": { en: "Publish Hub", ar: "مركز النشر" },
   "title.governance": { en: "Governance & Admin", ar: "الحوكمة والإدارة" },
+  "title.ai": { en: "AI Assistant", ar: "المساعد الذكي" },
+
+  "ai.subtitle": {
+    en: "Claude-assisted standards navigation & template classification (phase 2)",
+    ar: "التنقل في المعايير وتصنيف القوالب بمساعدة Claude (المرحلة 2)",
+  },
+  "ai.disabled.title": { en: "AI features are disabled", ar: "ميزات الذكاء الاصطناعي معطّلة" },
+  "ai.disabled.body": {
+    en: "Set ANTHROPIC_API_KEY in .env.local and restart to enable the standards assistant and datasheet classification. The rest of the CDE runs without it.",
+    ar: "عيّن ANTHROPIC_API_KEY في .env.local وأعد التشغيل لتفعيل مساعد المعايير وتصنيف صحائف البيانات. يعمل باقي المستودع بدونها.",
+  },
+  "ai.rag.title": { en: "Standards navigator", ar: "متصفّح المعايير" },
+  "ai.rag.sub": {
+    en: "Ask about the standards register — answers cite the source standard.",
+    ar: "اسأل عن سجل المعايير — تستشهد الإجابات بالمعيار المصدر.",
+  },
+  "ai.rag.placeholder": {
+    en: "e.g. What minimum yield strength does ASTM A240 require for SS plate?",
+    ar: "مثال: ما الحد الأدنى لقوة الخضوع الذي يتطلبه ASTM A240 لألواح الفولاذ المقاوم للصدأ؟",
+  },
+  "ai.rag.ask": { en: "Ask", ar: "اسأل" },
+  "ai.rag.refs": { en: "References consulted", ar: "المراجع المستشارة" },
+  "ai.classify.title": { en: "Datasheet auto-classification", ar: "التصنيف التلقائي لصحيفة البيانات" },
+  "ai.classify.sub": {
+    en: "Paste datasheet text — Claude suggests the product type & data template.",
+    ar: "الصق نص صحيفة البيانات — يقترح Claude نوع المنتج وقالب البيانات.",
+  },
+  "ai.classify.placeholder": {
+    en: "Paste datasheet text (e.g. Centrifugal pump, flow 250 m³/h, head 120 m, 315 kW motor, casing SS316)…",
+    ar: "الصق نص صحيفة البيانات (مثال: مضخة طرد مركزي، تدفق 250 م³/س، رأس 120 م، محرك 315 كيلوواط، غلاف SS316)…",
+  },
+  "ai.classify.run": { en: "Classify", ar: "صنّف" },
+  "ai.classify.suggested": { en: "Suggested template", ar: "القالب المقترح" },
+  "ai.classify.confidence": { en: "Confidence", ar: "الثقة" },
+  "ai.classify.none": { en: "No matching template in the catalogue.", ar: "لا يوجد قالب مطابق في الكتالوج." },
+  "ai.openTemplate": { en: "Open in Template Library →", ar: "افتح في مكتبة القوالب ←" },
+  "ai.thinking": { en: "Asking Claude…", ar: "جارٍ سؤال Claude…" },
 
   "th.tag": { en: "Tag ID", ar: "معرّف الوسم" },
   "th.class": { en: "Class", ar: "الفئة" },

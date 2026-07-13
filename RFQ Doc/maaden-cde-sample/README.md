@@ -47,4 +47,4 @@ npm install ; npm run db:reset ; npm run dev
 - ✅ S4 screens 1–4 (Dashboard, Template Library, Registry, Asset Detail)
 - ✅ S5 screens 5–7 (Compliance, Publish Hub, Governance) + publish simulator
 - ✅ S6 demo arc verified end-to-end (fails → fixes → 100% pass → hero published)
-- ⬜ S7 AI (standards RAG + auto-classification) — only on request
+- ✅ S7 AI (standards RAG + datasheet auto-classification) — Claude API (`claude-opus-4-8`), degrades gracefully with empty `ANTHROPIC_API_KEY` (AI screen shows disabled state; routes return 503). See `/ai`.

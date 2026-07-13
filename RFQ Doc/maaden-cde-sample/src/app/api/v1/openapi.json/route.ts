@@ -14,6 +14,7 @@ const spec = {
   tags: [
     { name: "hierarchy" }, { name: "templates" }, { name: "assets" },
     { name: "validation" }, { name: "publish" }, { name: "governance" },
+    { name: "ai" },
   ],
   paths: {
     "/hierarchy": {
@@ -111,6 +112,23 @@ const spec = {
         tags: ["governance"], summary: "Demo role switcher — sets JWT session cookie for a seeded user",
         requestBody: { content: { "application/json": { schema: { type: "object", properties: { username: { type: "string", example: "m.saad" } } } } } },
         responses: { "200": { description: "OK" } },
+      },
+    },
+    "/ai/status": {
+      get: { tags: ["ai"], summary: "Whether the optional AI layer is configured (ANTHROPIC_API_KEY). Degrades gracefully when absent.", responses: { "200": { description: "{ enabled, model }" } } },
+    },
+    "/ai/standards": {
+      post: {
+        tags: ["ai"], summary: "Standards RAG — answer an engineering-standards question grounded in the standards register, with references.",
+        requestBody: { content: { "application/json": { schema: { type: "object", required: ["question"], properties: { question: { type: "string", example: "What minimum yield strength does ASTM A240 require for SS plate?" } } } } } },
+        responses: { "200": { description: "{ answer, references[] }" }, "503": { description: "AI disabled — no API key" }, "502": { description: "Model unavailable" } },
+      },
+    },
+    "/ai/classify": {
+      post: {
+        tags: ["ai"], summary: "Auto-classification — suggest product type + data template from pasted datasheet text.",
+        requestBody: { content: { "application/json": { schema: { type: "object", required: ["text"], properties: { text: { type: "string", example: "Centrifugal pump, flow 250 m³/h, head 120 m, 315 kW motor, casing SS316" } } } } } },
+        responses: { "200": { description: "{ asset_class, product_type, template_code, confidence, rationale }" }, "503": { description: "AI disabled — no API key" }, "502": { description: "Model unavailable" } },
       },
     },
   },

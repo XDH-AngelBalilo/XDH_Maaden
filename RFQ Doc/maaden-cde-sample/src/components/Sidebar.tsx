@@ -13,6 +13,7 @@ const NAV = [
   { href: "/compliance", icon: "✓", key: "nav.compliance" },
   { href: "/publish", icon: "⇄", key: "nav.publish" },
   { href: "/governance", icon: "⚙", key: "nav.governance" },
+  { href: "/ai", icon: "✦", key: "nav.ai" },
 ];
 
 const USERS = [
