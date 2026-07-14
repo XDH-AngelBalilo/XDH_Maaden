@@ -1,5 +1,11 @@
 # Maaden CDE — Nightly Dev Progress
 
+## 2026-07-14 — S7 pushed to origin at user direction
+- User directed "proceed" in an interactive session; pushed the locally-committed S7 (`e56300b`) to `origin/main` (was 1 commit ahead; origin had been at `7f1ad84` Arabic toggle).
+- Re-verified before push on a fresh `db:reset`: `npm run build` clean (`/ai` compiles), AI degrades gracefully with empty `ANTHROPIC_API_KEY` (`/ai/status` → `{enabled:false}`, `/ai/standards` + `/ai/classify` POST → **503**, never 500). Demo arc intact: run 1 → 2 fails (ELE framework, MAT technical) + 4 warns, fix 3 → 0 fails, hero EQP-000789 published. DB left pristine.
+- README build status already shows S7 ✅ (set by the S7 commit). All build steps S1–S7 now on `origin/main`, plus the Arabic (EN/AR + RTL) toggle.
+- **Next:** demo-polish backlog — grow seed toward ~5 areas / 40 tags / 8 templates (keep the 4-asset story passing); empty/loading/error states; optional deeper AR i18n coverage (Asset Detail, Publish, Governance inner strings).
+
 ## 2026-07-09 — session fired outside window; stood down
 - Session invoked at **10:54 AM AST**, ~6 h past the 5:00 AM hard stop (intended window 1:00–5:00 AM).
 - Per the hard-stop rule, did **not** start new work: no `db:reset`, no build, no commits of app code, no push of app changes.
