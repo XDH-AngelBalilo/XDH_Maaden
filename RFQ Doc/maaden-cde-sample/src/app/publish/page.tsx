@@ -3,7 +3,9 @@ import PageHeader from "@/components/PageHeader";
 import { query } from "@/lib/db";
 import PublishPanel from "@/components/PublishPanel";
 import PublishQueue from "@/components/PublishQueue";
+import TargetStatusControl from "@/components/TargetStatusControl";
 import { tServer } from "@/lib/i18n";
+import { getSession, canApprove } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -57,6 +59,8 @@ export default async function PublishHub({
   const familyTargets = selected
     ? targets.filter((t) => t.family === selected)
     : [];
+
+  const editable = canApprove(getSession().role);
 
   return (
     <>
@@ -128,17 +132,21 @@ export default async function PublishHub({
                         <td>{t.system_name}</td>
                         <td className="small">{t.protocol}</td>
                         <td>
-                          <span
-                            className={`chip ${
-                              t.status === "connected"
-                                ? "c-ok"
-                                : t.status === "queued"
-                                  ? "c-warn"
-                                  : "c-info"
-                            }`}
-                          >
-                            {t.status}
-                          </span>
+                          {editable ? (
+                            <TargetStatusControl id={t.id} status={t.status} />
+                          ) : (
+                            <span
+                              className={`chip ${
+                                t.status === "connected"
+                                  ? "c-ok"
+                                  : t.status === "queued"
+                                    ? "c-warn"
+                                    : "c-info"
+                              }`}
+                            >
+                              {t.status}
+                            </span>
+                          )}
                         </td>
                       </tr>
                     ))}

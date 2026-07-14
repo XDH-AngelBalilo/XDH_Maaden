@@ -291,6 +291,18 @@ table.data.props td:first-child {
   border-width: 2px;
   box-shadow: 0 0 0 3px #fdf3d7;
 }
+/* status dropdown styled as a chip */
+.chip-select {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+.chip-select.c-ok { background: #e5f2e6; color: var(--ok); }
+.chip-select.c-warn { background: #fdf0dc; color: var(--warn); }
+.chip-select.c-info { background: #e8e8ec; color: #555; }
 
 .note {
   background: #fdf3d7;

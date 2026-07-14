@@ -101,6 +101,14 @@ const spec = {
     "/publish/targets": {
       get: { tags: ["publish"], summary: "The 10 roadmap integration targets grouped into 6 families", responses: { "200": { description: "OK" } } },
     },
+    "/publish/targets/{id}": {
+      patch: {
+        tags: ["publish"], summary: "Update an integration target's status connected|queued|planned (governance_lead)",
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        requestBody: { content: { "application/json": { schema: { type: "object", required: ["status"], properties: { status: { type: "string", enum: ["connected", "queued", "planned"] } } } } } },
+        responses: { "200": { description: "Updated" }, "403": { description: "Role denied" }, "404": { description: "Unknown target" } },
+      },
+    },
     "/publish/events": {
       get: { tags: ["publish"], summary: "Publish queue & event log with payload + sha256", responses: { "200": { description: "OK" } } },
     },
