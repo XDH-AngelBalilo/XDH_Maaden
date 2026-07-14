@@ -1,5 +1,12 @@
 # Maaden CDE — Nightly Dev Progress
 
+## 2026-07-14 (09:44 AM AST) — session fired outside window; stood down
+- Nightly session invoked at **09:44 AM AST Tuesday**, ~4.75 h past the 5:00 AM hard stop (intended window 1:00–5:00 AM).
+- Per the hard-stop rule, did **not** start new work: no `db:reset`, no build, no app commits, no app push. 09:44 AM is active user hours — `db:reset` would wipe live DB state and pushing to `main` risks colliding with the user's work.
+- Working tree already had uncommitted user edits under `RFQ Doc/` (pricing xlsx add/delete/modify + a new Quotation folder) — left untouched.
+- Repo state on entry: HEAD at `145ce95`. All build steps S1–S7 already on `origin/main` (pushed 2026-07-14 at user direction). Roadmap next item unchanged: **demo-polish backlog** (grow seed toward ~5 areas / 40 tags / 8 templates keeping the 4-asset story passing; empty/loading/error states; deeper AR i18n).
+- **Next run:** if within the 1–5 AM window, proceed with the demo-polish backlog per the schedule.
+
 ## 2026-07-14 — S7 pushed to origin at user direction
 - User directed "proceed" in an interactive session; pushed the locally-committed S7 (`e56300b`) to `origin/main` (was 1 commit ahead; origin had been at `7f1ad84` Arabic toggle).
 - Re-verified before push on a fresh `db:reset`: `npm run build` clean (`/ai` compiles), AI degrades gracefully with empty `ANTHROPIC_API_KEY` (`/ai/status` → `{enabled:false}`, `/ai/standards` + `/ai/classify` POST → **503**, never 500). Demo arc intact: run 1 → 2 fails (ELE framework, MAT technical) + 4 warns, fix 3 → 0 fails, hero EQP-000789 published. DB left pristine.
