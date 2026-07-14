@@ -1,3 +1,4 @@
+import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import { query } from "@/lib/db";
 import PublishPanel from "@/components/PublishPanel";
@@ -17,7 +18,16 @@ const SAT_POS: Record<string, React.CSSProperties> = {
 
 const FAMILIES = Object.keys(SAT_POS);
 
-export default async function PublishHub() {
+export default async function PublishHub({
+  searchParams,
+}: {
+  searchParams: { family?: string };
+}) {
+  const selected =
+    searchParams.family && FAMILIES.includes(searchParams.family)
+      ? searchParams.family
+      : null;
+
   const targets = await query(
     "SELECT id, system_name, family, protocol, status FROM cde.publish_targets ORDER BY id"
   );
@@ -27,7 +37,9 @@ export default async function PublishHub() {
      FROM cde.publish_events pe
      JOIN cde.assets a ON a.id = pe.asset_id
      JOIN cde.publish_targets pt ON pt.id = pe.target_id
-     ORDER BY pe.id DESC LIMIT 25`
+     ${selected ? "WHERE pt.family = $1" : ""}
+     ORDER BY pe.id DESC LIMIT 25`,
+    selected ? [selected] : []
   );
   const publishable = await query(
     `SELECT a.tag, a.name, a.lifecycle FROM cde.assets a
@@ -42,28 +54,42 @@ export default async function PublishHub() {
     return "planned";
   };
 
+  const familyTargets = selected
+    ? targets.filter((t) => t.family === selected)
+    : [];
+
   return (
     <>
       <PageHeader title={tServer().t("title.publish")} />
       <div className="p-6">
         <div className="note">
           Client vision image 4 — CDE at the centre, publishing governed asset data
-          to 6 system families. Sample uses a publish simulator; production covers
-          the 10 Master Roadmap integrations: Aconex · Primavera P6 · SAP S/4HANA ·
-          AVEVA PI · MS EPM · Azure AD · ADFS · SIEM · Outlook · ServiceNow.
+          to 6 system families. Click a family in the map to drill into its target
+          systems and publish activity. Sample uses a publish simulator; production
+          covers the 10 Master Roadmap integrations: Aconex · Primavera P6 · SAP
+          S/4HANA · AVEVA PI · MS EPM · Azure AD · ADFS · SIEM · Outlook · ServiceNow.
         </div>
         <div className="grid2">
           <div>
             <div className="card">
-              <h3>Integration map</h3>
+              <h3>
+                <span>Integration map</span>
+                <span className="sub">click a system family</span>
+              </h3>
               <div className="hub">
                 <div className="core">
                   CDE<span>asset data backbone</span>
                 </div>
                 {FAMILIES.map((f) => {
                   const st = familyStatus(f);
+                  const isSel = f === selected;
                   return (
-                    <div key={f} className="sat" style={SAT_POS[f]}>
+                    <Link
+                      key={f}
+                      href={isSel ? "/publish" : `/publish?family=${encodeURIComponent(f)}`}
+                      className={`sat sat-link${isSel ? " sat-sel" : ""}`}
+                      style={SAT_POS[f]}
+                    >
                       <b>{f.replace("Field & Data Acquisition", "Field & Data Acq.")}</b>
                       <span
                         className={`st chip ${
@@ -72,11 +98,55 @@ export default async function PublishHub() {
                       >
                         {st}
                       </span>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>
             </div>
+
+            {selected && (
+              <div className="card">
+                <h3>
+                  <span>
+                    {selected} <span className="sub">{familyTargets.length} target system(s)</span>
+                  </span>
+                  <Link href="/publish" className="btn">
+                    ← All families
+                  </Link>
+                </h3>
+                <table className="data">
+                  <thead>
+                    <tr>
+                      <th>System</th>
+                      <th>Protocol</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {familyTargets.map((t) => (
+                      <tr key={t.id}>
+                        <td>{t.system_name}</td>
+                        <td className="small">{t.protocol}</td>
+                        <td>
+                          <span
+                            className={`chip ${
+                              t.status === "connected"
+                                ? "c-ok"
+                                : t.status === "queued"
+                                  ? "c-warn"
+                                  : "c-info"
+                            }`}
+                          >
+                            {t.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
             <PublishPanel
               targets={targets}
               publishable={publishable.map((p) => ({
@@ -86,7 +156,7 @@ export default async function PublishHub() {
             />
           </div>
           <div>
-            <PublishQueue events={events} />
+            <PublishQueue events={events} family={selected} />
             <div className="card">
               <h3>
                 API access <span className="sub">REST · OpenAPI · keys per SoW 3.4.4</span>

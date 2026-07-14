@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export default function PublishQueue({
   events,
+  family = null,
 }: {
   events: {
     id: number;
@@ -15,6 +16,7 @@ export default function PublishQueue({
     system_name: string;
     family: string;
   }[];
+  family?: string | null;
 }) {
   const [openId, setOpenId] = useState<number | null>(null);
 
@@ -22,7 +24,9 @@ export default function PublishQueue({
     <div className="card">
       <h3>
         Publish queue &amp; events{" "}
-        <span className="sub">click a row for the JSON payload</span>
+        <span className="sub">
+          {family ? `filtered: ${family}` : "click a row for the JSON payload"}
+        </span>
       </h3>
       <table className="data">
         <thead>
@@ -95,7 +99,9 @@ export default function PublishQueue({
           {events.length === 0 && (
             <tr>
               <td colSpan={4} className="small">
-                No publish events yet.
+                {family
+                  ? `No publish events for ${family} yet.`
+                  : "No publish events yet."}
               </td>
             </tr>
           )}

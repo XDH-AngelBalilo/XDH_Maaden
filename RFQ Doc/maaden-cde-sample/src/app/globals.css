@@ -273,6 +273,24 @@ table.data.props td:first-child {
 .sat .st {
   font-size: 9.5px;
 }
+/* clickable integration-map satellites */
+.sat-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, border-color 0.08s ease;
+  cursor: pointer;
+}
+.sat-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+  border-color: var(--gold);
+}
+.sat-sel {
+  border-color: var(--gold);
+  border-width: 2px;
+  box-shadow: 0 0 0 3px #fdf3d7;
+}
 
 .note {
   background: #fdf3d7;
