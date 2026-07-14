@@ -1,5 +1,11 @@
 # Maaden CDE — Nightly Dev Progress
 
+## 2026-07-14 (interactive) — demo-polish: seed scaled to roadmap targets
+- User directed "start" interactively → began demo-polish backlog. Grew `db/seed/seed.sql` (v1.1) toward Implementation Plan §6 targets: **standards 5→8, product types 6→8, properties 12→24, data templates 4→8, hierarchy 10→27 (6 areas), assets 6→40**.
+- New templates: DT-EQP-VESL-001 (vessel/ASME VIII), DT-STR-CLAD-001 (cladding/MCIS-STR), DT-ELE-MOTR-001 (LV motor/IEC 60034), DT-EQP-VALV-001 (gate valve/API 600). New standards API 682 / IEC 60034 / API 600. New product types MOTOR-LV, VALVE-GATE.
+- **All 34 new assets are clean** (subsystem-assigned, valid mandatory values) so the 4-asset demo story is untouched. Verified: run 1 on 40 assets → still exactly **2 fails (ELE-000132 framework, MAT-000567 technical) + 4 warn assets** (EQP-000811, ELE-000132, STR-000245, MAT-000567), 36 pass; fix the 3 → **0 fails**; hero EQP-000789 publishes. `npm run build` clean; Registry, new template pages, and new asset-detail pages (EQP-000818, ELE-000137) all 200. DB left pristine.
+- **Next:** empty/loading/error states; optional deeper AR i18n coverage (Asset Detail, Publish, Governance inner strings).
+
 ## 2026-07-14 (09:44 AM AST) — session fired outside window; stood down
 - Nightly session invoked at **09:44 AM AST Tuesday**, ~4.75 h past the 5:00 AM hard stop (intended window 1:00–5:00 AM).
 - Per the hard-stop rule, did **not** start new work: no `db:reset`, no build, no app commits, no app push. 09:44 AM is active user hours — `db:reset` would wipe live DB state and pushing to `main` risks colliding with the user's work.
