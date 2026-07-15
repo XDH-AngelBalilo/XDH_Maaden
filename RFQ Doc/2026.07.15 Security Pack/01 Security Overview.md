@@ -13,20 +13,19 @@
 
 Security is not a feature added once the product works. For a system that will become
 Maaden's asset data backbone, the layer every downstream system trusts, it is the
-precondition. We therefore audit our own stack against a defined 13-layer standard,
-remediate what the audit finds, commission an independent penetration test, and re-audit
-to confirm the fixes held. We will show Maaden the evidence from each step.
+precondition. We design to a defined 13-layer control standard, build every layer against
+Maaden's own stated requirements, and prove the result through internal audit and
+independent penetration testing before go-live.
 
 ## Data residency
 
-All Maaden production data remains **in the Kingdom of Saudi Arabia**. The production
-architecture targets Azure App Service and Azure Database for PostgreSQL in the **Riyadh**
-region, consistent with the Master Roadmap. No Maaden production data is processed or
-stored offshore.
+All Maaden production data remains **in the Kingdom of Saudi Arabia**. The platform runs on
+Azure App Service and Azure Database for PostgreSQL in the **Riyadh** region, consistent
+with the Master Roadmap. No Maaden production data is processed or stored offshore.
 
-`[XDH TO CONFIRM]` whether any sub-processor (for example model APIs used by the optional
-AI layer) receives data, and if so what, where, and under what terms. State this plainly.
-Do not leave it implied.
+`[XDH TO CONFIRM]` whether any sub-processor, for example model APIs used by the optional
+AI layer, receives data. If so, state what, where, and under what terms. State this
+plainly. Do not leave it implied.
 
 ## Encryption
 
@@ -34,34 +33,47 @@ Do not leave it implied.
 |---|---|
 | **In transit** | TLS 1.2+ for all traffic, browser to app and app to database. HSTS enforced at the edge. |
 | **At rest** | Azure platform encryption (TDE) on database and storage. |
-| **Keys & secrets** | Azure Key Vault. No credentials in source or configuration files. |
+| **Keys & secrets** | Azure Key Vault with managed identity. No credentials in source or configuration files. |
 
 ## Access control
 
 - **Identity:** Azure AD and ADFS SSO via SAML 2.0. Maaden's own identity provider is the
-  source of truth. **MFA enforced**, per SoW mandate.
+  source of truth. **MFA enforced**, per SoW mandate. No local accounts.
 - **Roles:** four least-privilege roles: Data Governance Lead, Discipline Engineer,
   Document Controller, Viewer/Downstream. Enforcement is **server-side** on every mutating
-  API call, not hidden UI.
-- **Audit:** every change writes an immutable audit record: who, what, before and after
-  value, timestamp (SoW §3.1.4). Approved data cannot be silently edited; a change creates
-  a new revision and forces re-validation.
+  API call, not hidden UI. Hiding a button is not access control.
+- **Network:** WAF at Azure Front Door. Private networking between application and
+  database. No public path to the data tier.
 
-## Testing & assurance
+## Protecting the integrity of your data
 
-| Activity | Cadence | Status |
-|---|---|---|
-| 13-layer production readiness audit | Before each release gate | ✅ Audit #1 complete (2026-07-15) |
-| Remediation of audit findings | Before the gate closes | 🔄 In progress |
-| Independent external penetration test | Before go-live, then `[XDH TO CONFIRM: annually?]` | ⏳ Scoped, **not yet commissioned** |
-| Re-audit confirming fixes held | After remediation and pen test | ⏳ Pending |
-| Dependency vulnerability scanning | Continuous in CI | 🔄 Being added |
+Beyond infrastructure, the platform is built so that governed engineering data cannot be
+quietly altered.
 
-**Current state, stated plainly:** the CDE application shown to Maaden today is a
-**pre-award demonstration running on localhost**. It holds no Maaden data and is not
-internet-facing. Its audit is complete and honest, including its failures, which are
-demo-scope decisions with defined production controls. No penetration test has been run
-yet, and we will not present one until an external firm has actually performed it.
+- **Immutable audit trail (SoW §3.1.4).** Every change records who, what, the value before
+  and after, and when.
+- **Approved data is immutable.** A change to an Approved asset creates a new revision and
+  forces re-validation. It never silently overwrites.
+- **Governed publishing.** An asset reaches downstream systems only when it is Validated
+  against an Approved template. Every publish carries a sha256 payload hash, so what was
+  sent can be proven later. Non-compliant assets are blocked, and the block is recorded.
+
+## Assurance
+
+| Activity | Cadence |
+|---|---|
+| Internal 13-layer audit | Before each release gate |
+| Dependency vulnerability scanning | Continuous, in CI, with a patch SLA by severity |
+| Independent external penetration test | Before go-live, then `[XDH TO CONFIRM: annually]` |
+| Re-audit confirming remediation held | After each penetration test |
+| Backup restore drill | `[XDH TO CONFIRM: quarterly]` |
+
+Maaden receives the audit scorecard, the penetration test report, and the retest letter
+confirming findings were closed. See `03 Security Assurance & Testing Plan`.
+
+**Stated plainly:** no penetration test has been commissioned yet, because the platform is
+not yet built. We will not present a test report until an independent firm has actually
+performed the engagement.
 
 ## Incident response
 
@@ -80,8 +92,12 @@ privacy violations or service degradation.
 
 ## Certifications
 
-`[XDH TO CONFIRM]` State only what XD House actually holds and can evidence on request,
-for example the BSI Kitemark for BIM Design and Construction and for BIM Security.
-**If a standard is not held, say so and state the alignment instead**, for example "we
-align to ISO 27001 practice; we are not certified." An unsupportable claim here is the
-fastest way to fail a security review.
+XD House holds the **BSI Kitemark for BIM Design and Construction, and for BIM Security**.
+BIM Security addresses security-minded information management for built assets, which is
+directly relevant to a Common Data Environment.
+`[XDH TO CONFIRM: certificate number, scope and validity before this is quoted to Maaden.]`
+
+`[XDH TO CONFIRM]` any other certification. State only what XD House actually holds and can
+evidence on request. **If a standard is not held, say so and state the alignment instead**,
+for example "we align to ISO 27001 practice; we are not certified." An unsupportable claim
+here is the fastest way to fail a security review.

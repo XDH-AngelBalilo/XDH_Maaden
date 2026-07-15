@@ -1,28 +1,28 @@
-# Production Readiness Audit: 13 Layers
+# INTERNAL: demo hardening notes
 
-**System audited:** Maaden ARGP CDE Asset Data Backbone, localhost sample (Module M1 slice)
-**Commit audited:** `0d25f7f` | **Date:** 2026-07-15 | **Auditor:** XD House engineering (internal)
+> ⛔ **INTERNAL TO XD HOUSE. NOT FOR MAADEN.**
+>
+> This is not part of the client Security Pack and must not be sent to Maaden. The demo is
+> a pre-award sales artifact, not the deliverable. Handing the client a list of a
+> throwaway demo's localhost gaps invites the conclusion that the *product* is insecure,
+> about a thing they are not buying. The client pack covers what we will implement for
+> them; this file covers what we must fix in the demo.
+>
+> **The one thing that matters here:** finding C-1 is harmless while the demo runs on a
+> laptop and becomes a live vulnerability the moment the demo is exposed on a shared URL,
+> for example to let Maaden click through it themselves. Close C-1 and C-2 before that
+> ever happens.
+
+**System reviewed:** Maaden ARGP CDE Asset Data Backbone, localhost sample (Module M1 slice)
+**Commit reviewed:** `0d25f7f` | **Date:** 2026-07-15 | **Reviewer:** XD House engineering
 **Method:** Source review of the full application, plus a dependency vulnerability scan
 (`npm audit`), plus live reproduction of each finding against a running instance.
 
----
-
-## Scope statement, read first
-
-This audit scores **a pre-award demonstration application running on localhost**. It is
-not, and has never been, a production deployment. It holds no Maaden data, is not
-internet-facing, and has no users other than the demo operator.
-
-Several findings below are **deliberate demo-scope decisions**, not accidents. The clearest
-example is the unauthenticated role switcher, which exists so a reviewer can flip between
-Governance Lead, Engineer and Viewer without an identity provider. They are recorded here
-as findings anyway, because the honest thing to do is show the gap and the plan to close
-it, and because every one of them **must** be closed before any environment holds real
-data.
-
-The value of this document to Maaden is not "the demo is secure." It is this: XD House
-audits its own stack against a defined 13-layer standard, finds its own problems, and can
-show you the evidence.
+This reviews **a pre-award demonstration running on localhost**. It is not, and has never
+been, a production deployment. It holds no Maaden data, is not internet-facing, and has no
+users other than the demo operator. Several findings are **deliberate demo-scope
+decisions**, most obviously the unauthenticated role switcher, which exists so a reviewer
+can move between Governance Lead, Engineer and Viewer without an identity provider.
 
 ---
 

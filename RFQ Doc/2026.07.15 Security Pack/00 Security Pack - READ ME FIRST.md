@@ -7,53 +7,51 @@
 
 ## Why this pack exists
 
-Maaden's security / IT review team will evaluate XD House **before** commercial terms are
+Maaden's security and IT review team will evaluate XD House **before** commercial terms are
 agreed. That review arrives as a questionnaire: encryption, data residency, penetration
 testing, incident response, access control. Deals stall at that gate, usually in silence.
 
-This pack is the pre-emptive answer. It is designed to be handed to Maaden's security
-reviewers alongside the CDE demo, so the questionnaire is largely answered before it is
-sent.
+This pack answers it in advance. It sets out the security controls XD House will implement
+for the ARGP Digitalization Platform, mapped to Maaden's own stated requirements, and the
+assurance regime that proves those controls work.
 
 ## What is in the pack
 
-| # | Document | Audience | Status |
-|---|---|---|---|
-| 01 | **Security Overview** | Maaden, any reviewer | ✅ Ready to send |
-| 02 | **Production Readiness Audit, 13 Layers** | Maaden security / XD House engineering | ✅ Real audit, completed 2026-07-15 |
-| 03 | **Penetration Test, Scope & Commission Plan** | Maaden security / XD House management | ⚠️ Plan only. **No test has been run yet.** |
-| 04 | **Incident Response Plan** | Maaden security | 🟡 Draft, needs XD House sign-off |
-| 05 | **Security Questionnaire, Pre-Answers** | Maaden procurement / security | 🟡 Draft, contains items XD House must confirm |
+| # | Document | Purpose |
+|---|---|---|
+| 01 | **Security Overview** | The client-facing summary. Encryption, residency, access control, assurance, vulnerability reporting. Doubles as the copy for a Security page on the XD House website. |
+| 02 | **Security Implementation Plan** | The 13 control layers we will build, each mapped to the SoW clause it satisfies and the Azure service that delivers it. |
+| 03 | **Security Assurance & Testing Plan** | How the controls are proven: internal audit, independent penetration test, re-audit, and the cadence for each. |
+| 04 | **Incident Response Plan** | Severity levels, roles, containment, notification timelines, post-incident review. |
+| 05 | **Security Questionnaire, Pre-Answers** | Maaden's likely questions, answered. |
 
-## Read this before anything leaves the building
+## Scope
 
-Three honesty constraints are baked into this pack. Do not let them be edited out.
+This pack describes the **delivered production platform**. It is written to be handed to
+Maaden's security reviewers alongside the proposal.
 
-1. **The audit (02) scores the *localhost demo*, not a production system.** It is an honest
-   assessment and it contains failures, deliberately. Those failures are demo-scope
-   decisions (for example the unauthenticated role switcher), not defects to hide.
-   Presenting the demo as production-secure would be false and would not survive Maaden's
-   own review.
+It deliberately does not discuss the pre-award demonstration application. That demo is a
+sales artifact running on a laptop. It holds no Maaden data, is not internet-facing, and
+is not what Maaden is procuring. Its localhost configuration has no bearing on the security
+of the delivered platform, and raising it would only confuse the review.
 
-2. **There is no penetration test report, because no penetration test has been run.**
-   Document 03 is a *scope and commission plan* for an external firm. Never present it as
-   a result. The correct sequence is: audit, then fix, then external pen test, then
-   re-audit. We are at step 1.
+## Two rules before this leaves the building
 
-3. **Items marked `[XDH TO CONFIRM]` are unverified.** These are facts only XD House
-   management holds: certification status, insurance, retention periods, named
-   responders. They are placeholders, **not claims**. Every one must be filled or struck
-   before this pack goes to Maaden. Do not assert ISO 27001 or SOC 2 status anywhere
-   unless XD House actually holds the certificate and can produce it on request.
+1. **Items marked `[XDH TO CONFIRM]` are unverified.** These are facts only XD House
+   management holds: certification numbers, insurance, retention periods, named
+   responders, SLAs. They are placeholders, **not claims**. Every one must be filled or
+   struck before this pack goes to Maaden.
+
+2. **Do not claim a test or a certificate we do not have.** No penetration test has been
+   commissioned yet for this platform, and document 03 presents that as a plan, which is
+   the honest position at pre-award. Do not assert ISO 27001 or SOC 2 anywhere unless
+   XD House holds the certificate and can produce it on request. A certification claim is
+   the first thing a security reviewer verifies, and an unsupportable one ends the review.
 
 ## Recommended sequence
 
-1. XD House fills every `[XDH TO CONFIRM]` in 04 and 05.
-2. Remediate the **Critical** and **High** findings in 02 (see its remediation plan). Most
-   are hours, not weeks, because they are production-hardening steps the demo deliberately
-   skipped.
-3. Re-run the audit and confirm the fixes held.
-4. Commission the external pen test per 03.
-5. Publish 01 (Security Overview) as a page on the XD House website. It answers roughly
-   half the questionnaire at zero cost.
-6. Send 01, 02 and the pen test report to Maaden with the proposal.
+1. XD House fills every `[XDH TO CONFIRM]`.
+2. Confirm the BSI Kitemark certificate number, scope and validity before quoting it.
+3. Publish 01 as a Security page on the XD House website. It answers much of a standard
+   questionnaire at no cost.
+4. Send the pack with the proposal.

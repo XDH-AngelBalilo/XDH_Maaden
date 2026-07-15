@@ -2,66 +2,73 @@
 
 **Date:** 2026-07-15 | **Status:** 🟡 Draft, contains items XD House must confirm
 
-> Purpose: answer Maaden's security questionnaire **before it arrives**. Two answer columns:
-> **Demo (today)**, the truth about the pre-award sample, and **Production (committed)**,
-> what the delivered system will do per SoW §3.4 and the Master Roadmap.
+> Purpose: answer Maaden's security questionnaire **before it arrives**. Answers describe
+> the **delivered production platform**, which is what Maaden is procuring.
 >
-> **Rule for using this document:** never merge the two columns. The failure mode that ends
-> deals is answering a "today" question with a "committed" answer. If a reviewer asks "do
-> you encrypt at rest?" about a demo that does not, "yes" is not a shortcut. It is a
-> statement that will be tested and found false.
+> **Rule for using this document:** answer what is asked, and never claim a control, a test
+> or a certificate we do not have. A reviewer verifies claims. One unsupportable answer
+> costs more than every good answer earns.
 
 ---
 
 ## Data & encryption
 
-| Question | Demo (today) | Production (committed) |
-|---|---|---|
-| Encrypt data in transit? | ❌ No. Plaintext HTTP on localhost. Holds no Maaden data. | ✅ TLS 1.2+ end to end, HSTS at the edge |
-| Encrypt data at rest? | ❌ No. Local Postgres, no TDE. | ✅ Azure TDE on database and storage |
-| Where is data stored? | Demo operator's laptop. **No Maaden data.** | ✅ **KSA, Azure Riyadh region.** No production data offshore. |
-| Key management? | Env file (`.env.local`, gitignored) | ✅ Azure Key Vault / managed identity |
-| Data classification & retention? | N/A, no real data | `[XDH TO CONFIRM]` |
-| Sub-processors receiving data? | None. AI layer disabled, no API key set. | `[XDH TO CONFIRM: if the AI layer is enabled, state the model provider, what is sent, and where]` |
+| Question | Answer |
+|---|---|
+| Do you encrypt data in transit? | ✅ TLS 1.2+ end to end, browser to app and app to database. HSTS enforced at Azure Front Door. |
+| Do you encrypt data at rest? | ✅ Azure platform encryption (TDE) on database and storage. |
+| Where is our data stored? Onshore or offshore? | ✅ **Kingdom of Saudi Arabia.** Azure App Service and Azure Database for PostgreSQL, Riyadh region. No Maaden production data offshore. |
+| How are keys and secrets managed? | ✅ Azure Key Vault with managed identity. No credentials in source, config or environment files. Rotation policy applies. |
+| Data classification & retention? | `[XDH TO CONFIRM]` |
+| Do any sub-processors receive our data? | `[XDH TO CONFIRM: if the optional AI layer is enabled, name the model provider, what is sent, where it is processed, and the contractual terms. If not enabled, the answer is none.]` |
 
 ## Access control
 
-| Question | Demo (today) | Production (committed) |
-|---|---|---|
-| Authentication method? | ❌ **None.** Demo role switcher, no password. Deliberate, see audit C-2. | ✅ Azure AD and ADFS SSO, SAML 2.0 |
-| MFA? | ❌ No | ✅ Enforced (SoW mandate) |
-| RBAC? | 🟡 Yes, 4 roles enforced server-side. But unauthenticated callers default to Governance Lead (audit C-1). | ✅ Same 4 roles, IdP-backed, no anonymous access |
-| Least privilege? | 🟡 Role model yes, identity no | ✅ Yes |
-| Privileged access to prod? | N/A | `[XDH TO CONFIRM: named individuals, break-glass procedure]` |
-| Offboarding process? | N/A | `[XDH TO CONFIRM]` |
+| Question | Answer |
+|---|---|
+| Authentication method? | ✅ Azure AD and ADFS SSO via SAML 2.0. Maaden's identity provider is the source of truth. No local accounts. |
+| Is MFA enforced? | ✅ Yes, per SoW §3.4. |
+| Role-based access control? | ✅ Four least-privilege roles: Data Governance Lead, Discipline Engineer, Document Controller, Viewer/Downstream. Enforced server-side on every mutating API call. |
+| Is authorization enforced in the API or only the UI? | ✅ Server-side, in the API. Hiding a control in the interface is not access control. |
+| Who has privileged access to production? | `[XDH TO CONFIRM: named individuals, and the break-glass procedure]` |
+| Joiner / mover / leaver process? | `[XDH TO CONFIRM]` |
+
+## Data integrity and governance
+
+| Question | Answer |
+|---|---|
+| Is there an audit trail of data changes? | ✅ Immutable. Every mutation records actor, action, value before and after, and timestamp (SoW §3.1.4). |
+| Can approved engineering data be silently altered? | ✅ No. A change to an Approved asset creates a new revision and forces re-validation. There is no quiet-overwrite path. |
+| How do you stop bad data reaching our downstream systems? | ✅ An asset publishes only when Validated against an Approved data template. Every publish carries a sha256 payload hash. Non-compliant assets are blocked and the block is recorded. |
+| Can we prove what was sent to a downstream system? | ✅ Yes. Each publish event stores the full payload and its hash. |
 
 ## Testing & assurance
 
 | Question | Answer |
 |---|---|
-| Do you run vulnerability scans? | 🔄 `npm audit` run as part of audit #1, which found 1 high and 1 moderate, now being remediated. Continuous CI scanning is being added. |
-| **When was your last penetration test?** | ❌ **None on this application.** Scoped, and will be commissioned after remediation of audit findings. See `03`. **Do not answer this any other way.** |
-| Do you audit your own stack? | ✅ Yes, a 13-layer production readiness audit. Audit #1 complete 2026-07-15, report available on request (`02`). |
-| Secure SDLC? | 🟡 Code review and audit gates. GitHub Enterprise and Azure DevOps pipelines per roadmap. Formal policy: `[XDH TO CONFIRM]` |
-| Dependency / supply-chain management? | 🔄 Being added to CI. SBOM: `[XDH TO CONFIRM]` |
+| Do you run vulnerability scans? | ✅ Continuous dependency scanning in CI, with a patch SLA by severity. |
+| **When was your last penetration test?** | **None yet for this platform, because it is not yet built.** An independent penetration test is committed before go-live, then `[XDH TO CONFIRM: annually]`. You receive the report and the retest letter. See `03`. **Do not answer this any other way.** |
+| Do you audit your own stack? | ✅ Yes. A 13-layer internal audit before each release gate, covering every layer in `02`. You receive the scorecard. |
+| What is your testing sequence? | Audit, remediate, independent penetration test, re-audit. We fix known gaps before paying an external firm, so the engagement finds what we missed. |
+| Secure SDLC? | 🟡 Peer review, gated pipelines on GitHub Enterprise and Azure DevOps, no manual production access. Formal policy: `[XDH TO CONFIRM]` |
+| SBOM? | `[XDH TO CONFIRM]` |
 
 ## Operations
 
-| Question | Demo (today) | Production (committed) |
-|---|---|---|
-| Logging & monitoring? | 🟡 Immutable `audit_log` on every mutation | ✅ Same, plus App Insights and **Azure Sentinel SIEM** (SoW §3.4) |
-| Audit trail of data changes? | ✅ **Yes.** Actor, action, before and after, timestamp. Approved data immutable: a change forces a new revision and re-validation. | ✅ Same, retained per policy |
-| Backups / RPO / RTO? | ❌ None (audit M-3) | ✅ Azure PITR. RPO/RTO `[XDH TO CONFIRM]`, plus restore drills. |
-| Availability / SLA? | N/A | `[XDH TO CONFIRM]` |
-| **Incident response plan?** | 🟡 Draft, `04`, pending sign-off | ✅ Signed, tested, SIEM-integrated |
-| DR / business continuity? | ❌ None | `[XDH TO CONFIRM]` |
+| Question | Answer |
+|---|---|
+| Logging and monitoring? | ✅ Application Insights, plus immutable application audit trail. Security events forwarded to **Maaden's Azure Sentinel SIEM** per SoW §3.4. |
+| Backups, RPO and RTO? | ✅ Azure point-in-time restore, with rehearsed restore drills. Targets: `[XDH TO CONFIRM: RPO/RTO]` |
+| Availability / SLA? | `[XDH TO CONFIRM]` |
+| **Do you have an incident response plan? Can we see it?** | ✅ Yes, and yes. See `04`. Severity levels, named roles, containment, notification timelines, post-incident review. `[XDH TO CONFIRM: sign it before issuing]` |
+| Disaster recovery / business continuity? | `[XDH TO CONFIRM]` |
 
 ## Compliance & company
 
 | Question | Answer |
 |---|---|
-| BSI Kitemark? | XD House letterhead carries the BSI Kitemark for BIM Design and Construction, and for BIM Security. `[XDH TO CONFIRM: certificate number, scope and validity before quoting it]` |
-| ISO 27001 / SOC 2? | `[XDH TO CONFIRM]` **State only what is held and evidenceable. If none: say "not certified, aligned to ISO 27001 practice." Never imply otherwise.** |
+| BSI Kitemark? | ✅ XD House holds the BSI Kitemark for BIM Design and Construction, and for BIM Security. BIM Security covers security-minded information management for built assets, directly relevant to a CDE. `[XDH TO CONFIRM: certificate number, scope and validity before quoting]` |
+| ISO 27001 / SOC 2? | `[XDH TO CONFIRM]` **State only what is held and evidenceable. If not certified, say "not certified, aligned to ISO 27001 practice." Never imply otherwise.** |
 | Saudi PDPL compliance? | `[XDH TO CONFIRM: take legal advice, do not assert without it]` |
 | Cyber insurance? | `[XDH TO CONFIRM]` |
 | Security training for staff? | `[XDH TO CONFIRM]` |
@@ -70,21 +77,16 @@
 
 ---
 
-## How to handle the awkward questions
+## How to handle the awkward question
 
-**"Your demo has no authentication?"**
-Correct, deliberately. It is a pre-award demonstration on localhost holding no Maaden data,
-and the role switcher exists so your reviewers can move between the four personas without
-us standing up an IdP for a sales demo. It is recorded as finding C-1 and C-2 in our own
-audit, with the production control (ADFS and Azure AD SAML, MFA) and the removal already
-planned. We would rather show you the audit that finds it than a demo that hides it.
+**"When was your last penetration test?"**
 
-**"When was your last pen test?"**
-None on this application yet. We audit before we test, because testing before remediation
-spends your money rediscovering what we already documented. Audit #1 is complete and you
-can have it today. The external test is scoped and commissioned after remediation. You
-will get the report and the retest letter.
+None yet for this platform, because it is not yet built. Testing an unbuilt system proves
+nothing. The test is committed before go-live and scoped already: grey-box, against a
+pre-production environment that mirrors production, with authorization and privilege
+escalation across the four roles as the priority area. You will receive the findings
+report and the retest letter confirming the findings were closed.
 
-**"Can we see your audit?"**
-Yes. `02 Production Readiness Audit - 13 Layers`. It contains our failures. That is the
-point of it.
+Our sequence is audit, remediate, independent test, re-audit. We do not pay an external
+firm to rediscover what an internal audit already documented, and we do not present a test
+result until an external firm has actually produced one.
