@@ -167,14 +167,6 @@ function chip(s, { x, y, text, tone }) {
     }
   );
 
-  s.addShape(pres.ShapeType.line, {
-    x: 0.72,
-    y: 4.45,
-    w: 3.2,
-    h: 0,
-    line: { color: GOLD, width: 2 },
-  });
-
   s.addText(
     [
       { text: "SoW ARGP-DIGI-APP-SOW-001 Rev 00 §3.4", options: { breakLine: true } },
@@ -653,11 +645,8 @@ function chip(s, { x, y, text, tone }) {
     y += 0.78;
   }
 
-  s.addShape(pres.ShapeType.line, {
-    x: 0.72, y: 5.5, w: 3.2, h: 0, line: { color: GOLD, width: 2 },
-  });
   s.addText("The audit is available to your reviewers today.", {
-    x: 0.72, y: 5.72, w: 8.5, h: 0.4,
+    x: 0.72, y: 5.62, w: 8.5, h: 0.4,
     fontFace: "Cambria", fontSize: 17, italic: true, color: WHITE, margin: 0,
   });
   s.addText(
