@@ -41,10 +41,17 @@ export function CdeChip({ state }: { state: CdeState }) {
   return <span className={`chip ${CDE_CHIP[state]}`}>{state}</span>;
 }
 
-export function SeverityChip({ severity }: { severity: Severity | string }) {
+export function SeverityChip({
+  severity,
+  locale = "en",
+}: {
+  severity: Severity | string;
+  locale?: Locale;
+}) {
+  const t = makeT(locale);
   return (
     <span className={`chip ${severity === "fail" ? "c-err" : "c-warn"}`}>
-      {severity === "fail" ? "Fail" : "Warn"}
+      {severity === "fail" ? t("st.fail") : t("st.warn")}
     </span>
   );
 }
@@ -52,24 +59,20 @@ export function SeverityChip({ severity }: { severity: Severity | string }) {
 export function ComplianceChip({
   severity,
   family,
+  locale = "en",
 }: {
   severity: string | null;
   family?: string | null;
+  locale?: Locale;
 }) {
-  if (!severity) return <span className="chip c-ok">Pass</span>;
-  const label =
-    severity === "fail"
-      ? family === "technical"
-        ? "Technical fail"
-        : family === "quality"
-          ? "Quality fail"
-          : "Framework fail"
-      : family === "quality"
-        ? "Quality warn"
-        : "Framework warn";
+  const t = makeT(locale);
+  if (!severity) return <span className="chip c-ok">{t("cc.pass")}</span>;
+  // Key is family + severity, e.g. cc.technical_fail, so both locales read
+  // from one catalogue rather than concatenating translated fragments.
+  const fam = family === "technical" || family === "quality" ? family : "framework";
   return (
     <span className={`chip ${severity === "fail" ? "c-err" : "c-warn"}`}>
-      {label}
+      {t(`cc.${fam}_${severity}`)}
     </span>
   );
 }

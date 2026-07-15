@@ -29,21 +29,21 @@ export default async function Compliance() {
         <div className="kpis">
           <div className="kpi">
             <div className="v">{passRate === null ? "—" : `${passRate}%`}</div>
-            <div className="l">Overall pass</div>
+            <div className="l">{t("comp.overallPass")}</div>
             {passRate !== null && (
               <Bar pct={passRate} tone={run.fail_count === 0 ? "g" : "o"} />
             )}
           </div>
           <div className="kpi">
             <div className="v">{fams("framework", "fail")}</div>
-            <div className="l">Framework fails</div>
+            <div className="l">{t("comp.frameworkFails")}</div>
             <Bar pct={fams("framework", "fail") * 20} tone="r" />
           </div>
           <div className="kpi">
             <div className="v">
               {fams("framework", "warn") + fams("quality", "warn") + fams("technical", "warn")}
             </div>
-            <div className="l">Warnings</div>
+            <div className="l">{t("comp.warnings")}</div>
             <Bar
               pct={(fams("framework", "warn") + fams("quality", "warn")) * 10}
               tone="o"
@@ -51,7 +51,7 @@ export default async function Compliance() {
           </div>
           <div className="kpi">
             <div className="v">{fams("technical", "fail") + fams("quality", "fail")}</div>
-            <div className="l">Quality + technical fails</div>
+            <div className="l">{t("comp.qualityTechFails")}</div>
             <Bar pct={(fams("technical", "fail") + fams("quality", "fail")) * 20} tone="r" />
           </div>
         </div>
@@ -59,54 +59,59 @@ export default async function Compliance() {
         <div className="card">
           <h3>
             <span>
-              Validation pipeline{" "}
-              <span className="sub">
-                client vision image 2 — 3 check families before DT use
-              </span>
+              {t("comp.pipeline")}{" "}
+              <span className="sub">{t("comp.pipelineSub")}</span>
             </span>
             {run && (
-              <span className="sub">
-                last run #{run.id} · {new Date(run.finished_at).toLocaleString("en-GB")} ·{" "}
-                {run.assets_checked} assets
+              <span className="sub" dir="ltr">
+                {t("comp.lastRun")} #{run.id},{" "}
+                {new Date(run.finished_at).toLocaleString(
+                  locale === "ar" ? "ar-SA" : "en-GB"
+                )}
+                , {run.assets_checked} {t("comp.assetsChecked")}
               </span>
             )}
           </h3>
           <div className="flowrow">
             <div className="flowstep">
-              <b>STRUCTURE</b>Governance &amp; methodology → Asset data framework
-              compliance
+              <b>{t("comp.step.structure")}</b>
+              {t("comp.step.structureBody")}
             </div>
             <div className="flowstep">
-              <b>PROCESS</b>Data structure → Data quality compliance
+              <b>{t("comp.step.process")}</b>
+              {t("comp.step.processBody")}
             </div>
             <div className="flowstep">
-              <b>CONTENT</b>Technical spec standards → Technical &amp; market
-              compliance
+              <b>{t("comp.step.content")}</b>
+              {t("comp.step.contentBody")}
             </div>
             <div
               className="flowstep"
               style={{ borderStyle: "solid", borderColor: "var(--gold)" }}
             >
-              <b>RESULT</b>Data Template certified → asset publishable
+              <b>{t("comp.step.result")}</b>
+              {t("comp.step.resultBody")}
             </div>
           </div>
         </div>
 
         <div className="card">
           <h3>
-            Open findings{" "}
+            {t("comp.openFindings")}{" "}
             <span className="sub">
-              {run ? `${findings.length} findings` : "no run yet — press Run validation"}
+              {run
+                ? `${findings.length} ${t("comp.findingsCount")}`
+                : t("comp.noRun")}
             </span>
           </h3>
           <table className="data">
             <thead>
               <tr>
-                <th>Asset</th>
-                <th>Family</th>
-                <th>Severity</th>
-                <th>Finding</th>
-                <th>Action</th>
+                <th>{t("th.asset")}</th>
+                <th>{t("th.family")}</th>
+                <th>{t("th.severity")}</th>
+                <th>{t("th.finding")}</th>
+                <th>{t("th.action")}</th>
               </tr>
             </thead>
             <tbody>
@@ -117,20 +122,14 @@ export default async function Compliance() {
                       {f.tag}
                     </Link>
                   </td>
+                  <td>{t(`fam.${f.family}`)}</td>
                   <td>
-                    {f.family === "framework"
-                      ? "Framework"
-                      : f.family === "quality"
-                        ? "Data quality"
-                        : "Technical"}
-                  </td>
-                  <td>
-                    <SeverityChip severity={f.severity} />
+                    <SeverityChip severity={f.severity} locale={locale} />
                   </td>
                   <td>{formatFinding(locale, f.message_key, f.params)}</td>
                   <td>
                     <Link href={`/registry/${f.tag}`} className="btn inline-block">
-                      Fix
+                      {t("btn.fix")}
                     </Link>
                   </td>
                 </tr>
@@ -138,10 +137,8 @@ export default async function Compliance() {
               {run && findings.length === 0 && (
                 <tr>
                   <td colSpan={5}>
-                    <span className="chip c-ok">All clear</span>{" "}
-                    <span className="small">
-                      zero findings in run #{run.id} — assets moved to Validated.
-                    </span>
+                    <span className="chip c-ok">{t("comp.allClear")}</span>{" "}
+                    <span className="small">{t("comp.allClearNote")}</span>
                   </td>
                 </tr>
               )}

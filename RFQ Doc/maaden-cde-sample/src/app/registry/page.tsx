@@ -78,16 +78,19 @@ export default async function Registry({
 
   return (
     <>
-      <PageHeader title={t("title.registry")} actions={<RegisterAssetButton />} />
+      <PageHeader
+        title={t("title.registry")}
+        actions={<RegisterAssetButton locale={locale} />}
+      />
       <div className="p-6">
         <div className="grid31">
           <div className="card">
             <h3>
-              Plant hierarchy <span className="sub">SoW 3.1.3</span>
+              {t("reg.hierarchy")} <span className="sub">SoW 3.1.3</span>
             </h3>
             <div className="tree">
               <Link href={keepParams()} className={`block n1 ${!selected ? "sel" : ""}`}>
-                ▾ All areas
+                {t("reg.allAreas")}
               </Link>
               {nodes.map((n) => (
                 <Link
@@ -97,7 +100,7 @@ export default async function Registry({
                     String(n.id) === searchParams.node ? "sel" : ""
                   }`}
                 >
-                  ▸ {n.level === "Area" ? `Area ${n.code}` : n.code} — {n.name}
+                  {n.level === "Area" ? `${t("reg.area")} ${n.code}` : n.code}, {n.name}
                 </Link>
               ))}
             </div>
@@ -105,13 +108,17 @@ export default async function Registry({
           <div className="card">
             <h3>
               <span>
-                Assets{selected ? ` — ${selected.code} · ${selected.name}` : ""}{" "}
-                <span className="sub">{assets.length} tags</span>
+                {t("reg.assets")}
+                {selected ? `, ${selected.code} ${selected.name}` : ""}{" "}
+                <span className="sub">
+                  {assets.length} {t("reg.tags")}
+                </span>
               </span>
               <RegistryFilters
                 klass={searchParams.class ?? ""}
                 q={searchParams.q ?? ""}
                 node={searchParams.node ?? ""}
+                locale={locale}
               />
             </h3>
             <table className="data">
@@ -150,9 +157,10 @@ export default async function Registry({
                         <ComplianceChip
                           severity={a.worst_severity}
                           family={a.worst_family}
+                          locale={locale}
                         />
                       ) : (
-                        <span className="chip c-info">not validated</span>
+                        <span className="chip c-info">{t("reg.notValidated")}</span>
                       )}
                     </td>
                   </tr>
@@ -160,7 +168,7 @@ export default async function Registry({
                 {assets.length === 0 && (
                   <tr>
                     <td colSpan={7} className="small">
-                      No assets match the current filter.
+                      {t("reg.noMatch")}
                     </td>
                   </tr>
                 )}

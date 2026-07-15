@@ -2,13 +2,19 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { makeT, type Locale } from "@/lib/i18n-dict";
 
 interface Option {
   id: number;
   label: string;
 }
 
-export default function RegisterAssetButton() {
+export default function RegisterAssetButton({
+  locale = "en",
+}: {
+  locale?: Locale;
+}) {
+  const t = makeT(locale);
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [types, setTypes] = useState<Option[]>([]);
@@ -72,7 +78,7 @@ export default function RegisterAssetButton() {
   return (
     <>
       <button className="btn gold" onClick={() => setOpen(true)}>
-        + Register Asset
+        {t("btn.registerAsset")}
       </button>
       {open && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">

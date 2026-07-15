@@ -128,6 +128,72 @@ const DICT: Dict = {
   "th.rev": { en: "Rev", ar: "مراجعة" },
   "th.lifecycle": { en: "Lifecycle", ar: "دورة الحياة" },
   "th.compliance": { en: "Compliance", ar: "الامتثال" },
+  "th.asset": { en: "Asset", ar: "الأصل" },
+  "th.family": { en: "Family", ar: "العائلة" },
+  "th.severity": { en: "Severity", ar: "الخطورة" },
+  "th.finding": { en: "Finding", ar: "النتيجة" },
+  "th.action": { en: "Action", ar: "الإجراء" },
+
+  // ---- Asset Registry chrome
+  "reg.hierarchy": { en: "Plant hierarchy", ar: "هيكل المنشأة" },
+  "reg.allAreas": { en: "All areas", ar: "كل المناطق" },
+  "reg.assets": { en: "Assets", ar: "الأصول" },
+  "reg.tags": { en: "tags", ar: "وسم" },
+  "reg.search": { en: "Search tag or name…", ar: "ابحث عن وسم أو اسم…" },
+  "reg.allClasses": { en: "All classes", ar: "كل الفئات" },
+  "reg.noMatch": { en: "No assets match the current filter.", ar: "لا توجد أصول مطابقة للتصفية الحالية." },
+  "reg.notValidated": { en: "not validated", ar: "لم يتم التحقق" },
+  "reg.area": { en: "Area", ar: "منطقة" },
+
+  // ---- Compliance Centre chrome
+  "comp.overallPass": { en: "Overall pass", ar: "الاجتياز الإجمالي" },
+  "comp.frameworkFails": { en: "Framework fails", ar: "إخفاقات الإطار" },
+  "comp.warnings": { en: "Warnings", ar: "التحذيرات" },
+  "comp.qualityTechFails": { en: "Quality + technical fails", ar: "إخفاقات الجودة والتقنية" },
+  "comp.pipeline": { en: "Validation pipeline", ar: "مسار التحقق" },
+  "comp.pipelineSub": {
+    en: "client vision image 2 — 3 check families before DT use",
+    ar: "رؤية العميل صورة 2 — ثلاث عائلات فحص قبل استخدام القالب",
+  },
+  "comp.lastRun": { en: "last run", ar: "آخر تشغيل" },
+  "comp.assetsChecked": { en: "assets", ar: "أصل" },
+  "comp.openFindings": { en: "Open findings", ar: "النتائج المفتوحة" },
+  "comp.findingsCount": { en: "findings", ar: "نتيجة" },
+  "comp.noRun": { en: "no run yet, press Run validation", ar: "لا يوجد تشغيل بعد، اضغط تشغيل التحقق" },
+  "comp.allClear": { en: "All clear", ar: "الكل سليم" },
+  "comp.allClearNote": {
+    en: "zero findings in this run. Assets moved to Validated.",
+    ar: "لا توجد نتائج في هذا التشغيل. تم نقل الأصول إلى حالة تم التحقق.",
+  },
+  "comp.step.structure": { en: "STRUCTURE", ar: "الهيكل" },
+  "comp.step.process": { en: "PROCESS", ar: "العملية" },
+  "comp.step.content": { en: "CONTENT", ar: "المحتوى" },
+  "comp.step.result": { en: "RESULT", ar: "النتيجة" },
+  "comp.step.structureBody": {
+    en: "Governance & methodology to asset data framework compliance",
+    ar: "الحوكمة والمنهجية نحو الامتثال لإطار بيانات الأصول",
+  },
+  "comp.step.processBody": {
+    en: "Data structure to data quality compliance",
+    ar: "هيكل البيانات نحو الامتثال لجودة البيانات",
+  },
+  "comp.step.contentBody": {
+    en: "Technical spec standards to technical & market compliance",
+    ar: "معايير المواصفات التقنية نحو الامتثال التقني والسوقي",
+  },
+  "comp.step.resultBody": {
+    en: "Data Template certified, asset publishable",
+    ar: "اعتماد قالب البيانات، الأصل قابل للنشر",
+  },
+
+  // ---- Compliance chips shown on the registry
+  "cc.pass": { en: "Pass", ar: "ناجح" },
+  "cc.framework_fail": { en: "Framework fail", ar: "إخفاق الإطار" },
+  "cc.framework_warn": { en: "Framework warn", ar: "تحذير الإطار" },
+  "cc.quality_fail": { en: "Quality fail", ar: "إخفاق الجودة" },
+  "cc.quality_warn": { en: "Quality warn", ar: "تحذير الجودة" },
+  "cc.technical_fail": { en: "Technical fail", ar: "إخفاق تقني" },
+  "cc.technical_warn": { en: "Technical warn", ar: "تحذير تقني" },
 
   "lang.toggle": { en: "العربية", ar: "English" },
 

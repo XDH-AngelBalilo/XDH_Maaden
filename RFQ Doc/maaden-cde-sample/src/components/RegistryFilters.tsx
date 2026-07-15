@@ -2,18 +2,22 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { makeT, type Locale } from "@/lib/i18n-dict";
 
 export default function RegistryFilters({
   klass,
   q,
   node,
+  locale = "en",
 }: {
   klass: string;
   q: string;
   node: string;
+  locale?: Locale;
 }) {
   const router = useRouter();
   const [search, setSearch] = useState(q);
+  const t = makeT(locale);
 
   function apply(nextClass: string, nextQ: string) {
     const p = new URLSearchParams();
@@ -31,7 +35,7 @@ export default function RegistryFilters({
         value={klass}
         onChange={(e) => apply(e.target.value, search)}
       >
-        <option value="">All classes</option>
+        <option value="">{t("reg.allClasses")}</option>
         <option value="EQP">EQP</option>
         <option value="STR">STR</option>
         <option value="ELE">ELE</option>
@@ -39,7 +43,7 @@ export default function RegistryFilters({
       </select>
       <input
         className="input"
-        placeholder="Search tag or name…"
+        placeholder={t("reg.search")}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && apply(klass, search)}
