@@ -12,9 +12,9 @@ const LOGO_WHITE = b64("deck_img1.png"); // XD House logo, reversed (dark bg)
 const LOGO_DARK = b64("doc_img2.png"); // XD House logo, dark (light bg)
 const KITEMARK = b64("doc_img3.png"); // BSI Kitemark BIM D&C + BIM Security
 
-// House rule for this deck: no AI-tell symbols. No em dashes, no tick glyphs,
-// no middot separators, no arrow chains. Sentences are restructured to do the
-// work instead. Markers are plain filled dots.
+// House rule: no AI-tell symbols. No em dashes, no middot separators, no arrow
+// chains, no decorative accent lines. Sentences are restructured to do the work
+// instead of leaning on a dash. Ticks are fine and are used as pass markers.
 
 // Palette, matching the CDE application Maaden has already seen
 const CHARCOAL = "23242A";
@@ -77,12 +77,17 @@ function card(s, { x, y, w, h, fill }) {
   });
 }
 
-/** Plain filled dot used as a list marker, in place of a tick glyph. */
-function dot(s, { x, y, color }) {
+/** Tick in a filled circle, used as a pass / requirement-met marker. */
+function tick(s, { x, y, size = 0.34, bg, fg }) {
   s.addShape(pres.ShapeType.ellipse, {
-    x, y, w: 0.16, h: 0.16,
-    fill: { color },
-    line: { color },
+    x, y, w: size, h: size,
+    fill: { color: bg },
+    line: { color: bg },
+  });
+  s.addText("✓", {
+    x, y, w: size, h: size,
+    fontFace: "Calibri", fontSize: size * 36, bold: true, color: fg,
+    align: "center", valign: "middle", margin: 0,
   });
 }
 
@@ -381,13 +386,13 @@ function chip(s, { x, y, text, tone }) {
   for (let i = 0; i < passes.length; i++) {
     const [t, d] = passes[i];
     card(s, { x, y, w: 5.9, h: 1.45 });
-    dot(s, { x: x + 0.3, y: y + 0.35, color: OK });
+    tick(s, { x: x + 0.25, y: y + 0.28, size: 0.42, bg: "E5F2E6", fg: OK });
     s.addText(t, {
-      x: x + 0.62, y: y + 0.24, w: 5.1, h: 0.3,
+      x: x + 0.82, y: y + 0.24, w: 4.9, h: 0.3,
       fontFace: "Calibri", fontSize: 13.5, bold: true, color: INK, margin: 0,
     });
     s.addText(d, {
-      x: x + 0.62, y: y + 0.57, w: 5.1, h: 0.72,
+      x: x + 0.82, y: y + 0.57, w: 4.9, h: 0.72,
       fontFace: "Calibri", fontSize: 11, color: MUTED, lineSpacing: 14.5, margin: 0,
     });
     if (i % 2 === 0) x += 6.2;
@@ -414,7 +419,7 @@ function chip(s, { x, y, text, tone }) {
 
   let y = 1.6;
   for (const [r, how] of reqs) {
-    dot(s, { x: 0.66, y: y + 0.19, color: GOLD });
+    tick(s, { x: 0.62, y: y + 0.12, size: 0.3, bg: CHARCOAL, fg: GOLD });
     s.addText(r, {
       x: 1.08, y, w: 4.6, h: 0.52,
       fontFace: "Calibri", fontSize: 13, bold: true, color: INK, valign: "middle", margin: 0,
@@ -540,7 +545,7 @@ function chip(s, { x, y, text, tone }) {
   ];
   let y = 2.95;
   for (const [t, d] of pts) {
-    dot(s, { x: 0.75, y: y + 0.14, color: GOLD });
+    tick(s, { x: 0.72, y: y + 0.06, size: 0.34, bg: GOLD, fg: CHARCOAL });
     s.addText(t, {
       x: 1.22, y, w: 3.3, h: 0.42,
       fontFace: "Calibri", fontSize: 15, bold: true, color: GOLD, valign: "middle", margin: 0,
