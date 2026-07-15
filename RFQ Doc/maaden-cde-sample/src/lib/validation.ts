@@ -1,6 +1,7 @@
 import { query, queryOne } from "./db";
 import { audit } from "./audit";
 import type { Finding, RuleFamily, Severity } from "./types";
+import type { FindingParams } from "./i18n-dict";
 
 const TAG_PATTERN = /^(STR|ELE|EQP|MAT)-\d{6}$/;
 
@@ -94,10 +95,12 @@ export async function runValidation(actor: string): Promise<RunResult> {
   for (const a of assets) tagCounts.set(a.tag, (tagCounts.get(a.tag) ?? 0) + 1);
 
   const findings: (Finding & { tag: string })[] = [];
+  /** Record a finding as a message KEY + params — never rendered prose. */
   const add = (
     asset: AssetRow,
     rule: RuleRow,
-    message: string,
+    message_key: string,
+    params: FindingParams = {},
     severity: Severity = rule.severity
   ) =>
     findings.push({
@@ -106,7 +109,8 @@ export async function runValidation(actor: string): Promise<RunResult> {
       rule_id: rule.id,
       family: rule.family,
       severity,
-      message,
+      message_key,
+      params,
     });
 
   for (const asset of assets) {
@@ -119,8 +123,7 @@ export async function runValidation(actor: string): Promise<RunResult> {
       const check = rule.expression?.check;
       switch (check) {
         case "has_template":
-          if (!asset.template_id)
-            add(asset, rule, "No data template assigned");
+          if (!asset.template_id) add(asset, rule, "finding.no_template");
           break;
 
         case "mandatory_populated":
@@ -129,20 +132,18 @@ export async function runValidation(actor: string): Promise<RunResult> {
             if (!tp.mandatory) continue;
             const v = vals.get(tp.property_id);
             if (!v || v.value === null || v.value.trim() === "") {
-              add(
-                asset,
-                rule,
-                `Mandatory property "${tp.prop_name}" not populated`
-              );
+              add(asset, rule, "finding.mandatory_missing", {
+                property: tp.prop_name,
+              });
             }
           }
           break;
 
         case "hierarchy_assigned":
           if (!asset.hierarchy_id) {
-            add(asset, rule, "No plant hierarchy node assigned");
+            add(asset, rule, "finding.no_hierarchy");
           } else if (asset.hierarchy_level !== "Subsystem") {
-            add(asset, rule, "Tag not yet assigned to subsystem node");
+            add(asset, rule, "finding.not_subsystem");
           }
           break;
 
@@ -151,13 +152,13 @@ export async function runValidation(actor: string): Promise<RunResult> {
             ? new RegExp(rule.expression.pattern)
             : TAG_PATTERN;
           if (!pattern.test(asset.tag))
-            add(asset, rule, `Tag "${asset.tag}" does not match {CLASS}-{6 digits}`);
+            add(asset, rule, "finding.tag_format", { tag: asset.tag });
           break;
         }
 
         case "unique_tag":
           if ((tagCounts.get(asset.tag) ?? 0) > 1)
-            add(asset, rule, `Duplicate tag "${asset.tag}"`);
+            add(asset, rule, "finding.duplicate_tag", { tag: asset.tag });
           break;
 
         case "uom_matches":
@@ -165,11 +166,11 @@ export async function runValidation(actor: string): Promise<RunResult> {
             if (!tp.uom) continue;
             const v = vals.get(tp.property_id);
             if (v && v.value !== null && v.uom && v.uom !== tp.uom) {
-              add(
-                asset,
-                rule,
-                `UoM mismatch: ${tp.prop_name} given in "${v.uom}", template requires "${tp.uom}"`
-              );
+              add(asset, rule, "finding.uom_mismatch", {
+                property: tp.prop_name,
+                actual: v.uom,
+                expected: tp.uom,
+              });
             }
           }
           break;
@@ -179,21 +180,19 @@ export async function runValidation(actor: string): Promise<RunResult> {
             const v = vals.get(tp.property_id);
             if (!v || v.value === null || v.value.trim() === "") continue;
             if (tp.datatype === "number" && isNaN(Number(v.value))) {
-              add(
-                asset,
-                rule,
-                `${tp.prop_name}: "${v.value}" is not a valid number`
-              );
+              add(asset, rule, "finding.datatype_number", {
+                property: tp.prop_name,
+                value: v.value,
+              });
             }
             if (
               tp.datatype === "boolean" &&
               !["true", "false", "yes", "no"].includes(v.value.toLowerCase())
             ) {
-              add(
-                asset,
-                rule,
-                `${tp.prop_name}: "${v.value}" is not a valid boolean`
-              );
+              add(asset, rule, "finding.datatype_boolean", {
+                property: tp.prop_name,
+                value: v.value,
+              });
             }
           }
           break;
@@ -210,11 +209,12 @@ export async function runValidation(actor: string): Promise<RunResult> {
             if (isNaN(n)) continue;
             const { min, max } = tp.validation;
             if ((min !== undefined && n < min) || (max !== undefined && n > max)) {
-              add(
-                asset,
-                rule,
-                `${tp.prop_name} = ${n} outside template range [${min ?? "−∞"}, ${max ?? "∞"}]`
-              );
+              add(asset, rule, "finding.range", {
+                property: tp.prop_name,
+                value: n,
+                min: min ?? "−∞",
+                max: max ?? "∞",
+              });
             }
           }
           break;
@@ -226,11 +226,11 @@ export async function runValidation(actor: string): Promise<RunResult> {
             if (!v || v.value === null || v.value.trim() === "") continue;
             const allowed: string[] = tp.validation.values ?? [];
             if (!allowed.includes(v.value)) {
-              add(
-                asset,
-                rule,
-                `${tp.prop_name} "${v.value}" not in approved list {${allowed.join(", ")}}`
-              );
+              add(asset, rule, "finding.enum", {
+                property: tp.prop_name,
+                value: v.value,
+                allowed: allowed.join(", "),
+              });
             }
           }
           break;
@@ -249,11 +249,14 @@ export async function runValidation(actor: string): Promise<RunResult> {
               op === ">"  ? n > limit :
               op === "<"  ? n < limit : n === limit;
             if (!ok) {
-              add(
-                asset,
-                rule,
-                `${tp.prop_name} ${n} ${v.uom ?? ""} violates ${standard ?? "standard"} limit (${op} ${limit})`.trim()
-              );
+              add(asset, rule, "finding.standard_limit", {
+                property: tp.prop_name,
+                value: n,
+                uom: v.uom ?? "",
+                standard: standard ?? "standard",
+                op,
+                limit,
+              });
             }
           }
           break;
@@ -285,9 +288,18 @@ export async function runValidation(actor: string): Promise<RunResult> {
 
   for (const f of findings) {
     await query(
-      `INSERT INTO cde.validation_findings (run_id, asset_id, rule_id, family, severity, message)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [runId, f.asset_id, f.rule_id, f.family, f.severity, f.message]
+      `INSERT INTO cde.validation_findings
+         (run_id, asset_id, rule_id, family, severity, message_key, params)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [
+        runId,
+        f.asset_id,
+        f.rule_id,
+        f.family,
+        f.severity,
+        f.message_key,
+        JSON.stringify(f.params ?? {}),
+      ]
     );
   }
 
@@ -336,7 +348,7 @@ export async function openFindings(runId?: number) {
   if (!id) return [];
   return query(
     `SELECT f.id, f.asset_id, a.tag, a.name AS asset_name, f.family, f.severity,
-            f.message, f.resolved, r.name AS rule_name
+            f.message_key, f.params, f.resolved, r.name AS rule_name
      FROM cde.validation_findings f
      JOIN cde.assets a ON a.id = f.asset_id
      JOIN cde.validation_rules r ON r.id = f.rule_id

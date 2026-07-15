@@ -53,5 +53,8 @@ export interface Finding {
   rule_id: number;
   family: RuleFamily;
   severity: Severity;
-  message: string;
+  /** i18n key, e.g. 'finding.mandatory_missing' — rendered per locale by the UI. */
+  message_key: string;
+  /** Structured values substituted into the message, e.g. { property: 'Busbar rating' }. */
+  params: Record<string, string | number | null | undefined>;
 }

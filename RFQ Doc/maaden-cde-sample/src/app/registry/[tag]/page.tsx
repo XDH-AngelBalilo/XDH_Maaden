@@ -63,7 +63,7 @@ export default async function AssetDetail({
   );
 
   const findings = await query(
-    `SELECT f.family, f.severity, f.message
+    `SELECT f.family, f.severity, f.message_key, f.params
      FROM cde.validation_findings f
      WHERE f.asset_id = $1 AND f.run_id = (SELECT max(id) FROM cde.validation_runs)`,
     [asset.id]
@@ -100,7 +100,10 @@ export default async function AssetDetail({
   // property-level check vs findings
   const propCheck = (p: any) => {
     if (!hasRun) return <span className="chip c-info">—</span>;
-    const hit = findings.find((f) => f.message.includes(p.name));
+    // Match on the finding's structured params, not on prose — this is exact
+    // (a property named "Power" no longer matches "Power (absorbed)") and it
+    // works regardless of the display locale.
+    const hit = findings.find((f) => f.params?.property === p.name);
     if (hit)
       return (
         <span className={`chip ${hit.severity === "fail" ? "c-err" : "c-warn"}`}>

@@ -145,6 +145,9 @@ CREATE TABLE validation_runs (
   pass_count    INT, warn_count INT, fail_count INT
 );
 
+-- Findings store a message KEY + structured params, never prose: the UI renders
+-- them per locale (EN/AR), and downstream consumers can match on params
+-- (e.g. params->>'property') instead of parsing English text.
 CREATE TABLE validation_findings (
   id            SERIAL PRIMARY KEY,
   run_id        INT NOT NULL REFERENCES validation_runs(id) ON DELETE CASCADE,
@@ -152,7 +155,8 @@ CREATE TABLE validation_findings (
   rule_id       INT NOT NULL REFERENCES validation_rules(id),
   family        TEXT NOT NULL,
   severity      TEXT NOT NULL,
-  message       TEXT NOT NULL,
+  message_key   TEXT NOT NULL,                 -- e.g. 'finding.mandatory_missing'
+  params        JSONB NOT NULL DEFAULT '{}',   -- e.g. {"property":"Busbar rating"}
   resolved      BOOLEAN NOT NULL DEFAULT FALSE
 );
 

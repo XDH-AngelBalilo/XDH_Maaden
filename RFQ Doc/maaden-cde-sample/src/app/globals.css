@@ -24,6 +24,21 @@ body {
   font-family: "Segoe UI", system-ui, sans-serif;
 }
 
+/* Arabic: Tajawal (loaded via next/font, see layout.tsx). Applied only when the
+   locale is 'ar'; the Segoe UI stack stays the fallback for Latin glyphs and
+   for any run where the font fails to load. */
+html[lang="ar"] body,
+html[lang="ar"] .input,
+html[lang="ar"] .btn,
+html[lang="ar"] select,
+html[lang="ar"] button {
+  font-family: var(--font-ar), "Segoe UI", system-ui, sans-serif;
+}
+/* Tag IDs, template codes and payloads stay monospace + LTR in both locales. */
+html[lang="ar"] .mono {
+  font-family: Consolas, monospace;
+}
+
 /* buttons */
 .btn {
   padding: 7px 14px;

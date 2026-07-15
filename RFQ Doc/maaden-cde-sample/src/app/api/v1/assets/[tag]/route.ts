@@ -49,7 +49,8 @@ export async function GET(
   );
 
   const findings = await query(
-    `SELECT f.family, f.severity, f.message, f.resolved, r.name AS rule_name
+    `SELECT f.family, f.severity, f.message_key, f.params, f.resolved,
+            r.name AS rule_name
      FROM cde.validation_findings f
      JOIN cde.validation_rules r ON r.id = f.rule_id
      WHERE f.asset_id = $1 AND f.run_id = (SELECT max(id) FROM cde.validation_runs)

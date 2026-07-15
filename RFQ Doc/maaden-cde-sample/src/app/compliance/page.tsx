@@ -5,6 +5,7 @@ import { query } from "@/lib/db";
 import { latestRun, openFindings } from "@/lib/validation";
 import RunValidationButton from "@/components/RunValidationButton";
 import { tServer } from "@/lib/i18n";
+import { formatFinding } from "@/lib/i18n-dict";
 
 export const dynamic = "force-dynamic";
 
@@ -126,7 +127,7 @@ export default async function Compliance() {
                   <td>
                     <SeverityChip severity={f.severity} />
                   </td>
-                  <td>{f.message}</td>
+                  <td>{formatFinding(locale, f.message_key, f.params)}</td>
                   <td>
                     <Link href={`/registry/${f.tag}`} className="btn inline-block">
                       Fix

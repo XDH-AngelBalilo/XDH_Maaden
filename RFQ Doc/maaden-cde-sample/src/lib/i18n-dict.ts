@@ -130,6 +130,58 @@ const DICT: Dict = {
   "th.compliance": { en: "Compliance", ar: "الامتثال" },
 
   "lang.toggle": { en: "العربية", ar: "English" },
+
+  // ---- Validation findings -------------------------------------------------
+  // The engine stores a key + params (never prose); these render it per locale.
+  // Placeholders are {name} and are substituted from the finding's params.
+  "finding.no_template": {
+    en: "No data template assigned",
+    ar: "لم يتم تعيين قالب بيانات",
+  },
+  "finding.mandatory_missing": {
+    en: 'Mandatory property "{property}" not populated',
+    ar: 'الخاصية الإلزامية "{property}" غير مُعبّأة',
+  },
+  "finding.no_hierarchy": {
+    en: "No plant hierarchy node assigned",
+    ar: "لم يتم تعيين عقدة في هيكل المنشأة",
+  },
+  "finding.not_subsystem": {
+    en: "Tag not yet assigned to subsystem node",
+    ar: "لم يتم تعيين الوسم إلى عقدة نظام فرعي بعد",
+  },
+  "finding.tag_format": {
+    en: 'Tag "{tag}" does not match {CLASS}-{6 digits}',
+    ar: 'الوسم "{tag}" لا يطابق الصيغة {CLASS}-{6 digits}',
+  },
+  "finding.duplicate_tag": {
+    en: 'Duplicate tag "{tag}"',
+    ar: 'وسم مكرر "{tag}"',
+  },
+  "finding.uom_mismatch": {
+    en: 'UoM mismatch: {property} given in "{actual}", template requires "{expected}"',
+    ar: 'عدم تطابق وحدة القياس: {property} مُدخلة بـ "{actual}"، والقالب يتطلب "{expected}"',
+  },
+  "finding.datatype_number": {
+    en: '{property}: "{value}" is not a valid number',
+    ar: '{property}: القيمة "{value}" ليست رقمًا صالحًا',
+  },
+  "finding.datatype_boolean": {
+    en: '{property}: "{value}" is not a valid boolean',
+    ar: '{property}: القيمة "{value}" ليست قيمة منطقية صالحة',
+  },
+  "finding.range": {
+    en: "{property} = {value} outside template range [{min}, {max}]",
+    ar: "{property} = {value} خارج نطاق القالب [{min}, {max}]",
+  },
+  "finding.enum": {
+    en: '{property} "{value}" not in approved list {{allowed}}',
+    ar: '{property} "{value}" غير مدرجة في القائمة المعتمدة {{allowed}}',
+  },
+  "finding.standard_limit": {
+    en: "{property} {value} {uom} violates {standard} limit ({op} {limit})",
+    ar: "{property} {value} {uom} يخالف حد {standard} ({op} {limit})",
+  },
 };
 
 export type Translator = (key: string, fallback?: string) => string;
@@ -140,4 +192,30 @@ export function makeT(locale: Locale): Translator {
     if (!entry) return fallback ?? key;
     return entry[locale];
   };
+}
+
+/** Params carried by a finding — values are substituted into {placeholders}. */
+export type FindingParams = Record<string, string | number | null | undefined>;
+
+/**
+ * Render a stored finding (message_key + params) into the given locale.
+ * Unknown keys fall back to the key itself so a missing translation is visible
+ * rather than silently blank. Missing params render as an empty string.
+ */
+export function formatFinding(
+  locale: Locale,
+  key: string,
+  params: FindingParams = {}
+): string {
+  const entry = DICT[key];
+  if (!entry) return key;
+  return entry[locale]
+    .replace(/\{(\w+)\}/g, (match, name: string) => {
+      const v = params[name];
+      // Leave literal placeholders that are part of the message itself
+      // (e.g. {CLASS} in the tag-format message) untouched when unsupplied.
+      if (v === undefined || v === null) return match;
+      return String(v);
+    })
+    .trim();
 }
