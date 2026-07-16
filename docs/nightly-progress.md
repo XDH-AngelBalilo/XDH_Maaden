@@ -1,5 +1,14 @@
 # Maaden CDE — Nightly Dev Progress
 
+## 2026-07-16 (10:08 AM AST) — session fired outside window; stood down
+- Nightly session invoked at **10:08 AM AST Thursday**, ~5 h past the 5:00 AM hard stop (intended window 1:00–5:00 AM). Third out-of-window firing (see 2026-07-09, 2026-07-14) — the schedule's trigger time looks misconfigured and is worth checking.
+- Per the hard-stop rule, did **not** start new work: no `db:reset`, no `npm install`, no build, no app commits, no app push. 10 AM is active user hours — `db:reset` would wipe live DB state and pushing to `main` risks colliding with the user's work.
+- **The user is actively committing right now**: HEAD moved from `8325708` to `36d45a7` between two read-only git calls during this session. Recent work is presentation decks (Security & Assurance, CDE demo, Master Roadmap) plus Publish Hub editable integration-target status and findings-as-`message_key` i18n.
+- Working tree had uncommitted user edits under `RFQ Doc/` (pricing xlsx modify/delete/add + a new `2026.07.06 Quotation/` folder) — left untouched.
+- Repo state on entry: branch `main`, HEAD `36d45a7`. README build status confirms **S1–S7 all ✅** (S7 AI: standards RAG + datasheet classification, degrades gracefully on empty `ANTHROPIC_API_KEY`).
+- Roadmap next item unchanged: **demo-polish backlog** — empty/loading/error states; optional deeper AR i18n coverage (Asset Detail, Publish, Governance inner strings). Seed scaling to plan targets (40 assets / 8 templates / 8 standards / 6 areas) is already done as of 2026-07-14.
+- **Next run:** if within the 1–5 AM window, proceed with the demo-polish backlog per the schedule.
+
 ## 2026-07-14 (interactive) — demo-polish: seed scaled to roadmap targets
 - User directed "start" interactively → began demo-polish backlog. Grew `db/seed/seed.sql` (v1.1) toward Implementation Plan §6 targets: **standards 5→8, product types 6→8, properties 12→24, data templates 4→8, hierarchy 10→27 (6 areas), assets 6→40**.
 - New templates: DT-EQP-VESL-001 (vessel/ASME VIII), DT-STR-CLAD-001 (cladding/MCIS-STR), DT-ELE-MOTR-001 (LV motor/IEC 60034), DT-EQP-VALV-001 (gate valve/API 600). New standards API 682 / IEC 60034 / API 600. New product types MOTOR-LV, VALVE-GATE.
