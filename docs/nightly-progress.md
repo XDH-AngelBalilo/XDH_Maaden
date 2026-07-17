@@ -1,5 +1,13 @@
 # Maaden CDE — Nightly Dev Progress
 
+## 2026-07-17 (07:23 AM AST) — session fired outside window; stood down
+- Nightly session invoked at **07:23 AM AST Friday**, ~2.4 h past the 5:00 AM hard stop (intended window 1:00–5:00 AM). Fourth consecutive out-of-window firing (2026-07-09, 2026-07-14, 2026-07-16) — the schedule's trigger time is misconfigured and should be fixed to fire inside 1–5 AM.
+- Per the hard-stop rule, did **not** start new work: no `npm install`, no `db:reset`, no build, no app commits, no app push. 07:23 AM is active user hours — `db:reset` would wipe live DB state and pushing to `main` risks colliding with the user's work.
+- Working tree had uncommitted user edits under `RFQ Doc/` (pricing xlsx modify/delete/add, Security & Assurance pptx, new `2026.07.06 Quotation/` and `New info/` folders) — left untouched (pricing/commercial docs are off-limits).
+- Repo state on entry: branch `main`, HEAD `29a050d` (prior stand-down note). README build status confirms **S1–S7 all ✅** (S7 AI: standards RAG + datasheet classification, degrades gracefully on empty `ANTHROPIC_API_KEY`).
+- Roadmap next item unchanged: **demo-polish backlog** — empty/loading/error states; optional deeper AR i18n coverage (Asset Detail, Publish, Governance inner strings). Seed scaling to plan targets (40 assets / 8 templates / 8 standards / 6 areas) already done as of 2026-07-14.
+- **Next run:** if within the 1–5 AM window, proceed with the demo-polish backlog per the schedule.
+
 ## 2026-07-16 (10:08 AM AST) — session fired outside window; stood down
 - Nightly session invoked at **10:08 AM AST Thursday**, ~5 h past the 5:00 AM hard stop (intended window 1:00–5:00 AM). Third out-of-window firing (see 2026-07-09, 2026-07-14) — the schedule's trigger time looks misconfigured and is worth checking.
 - Per the hard-stop rule, did **not** start new work: no `db:reset`, no `npm install`, no build, no app commits, no app push. 10 AM is active user hours — `db:reset` would wipe live DB state and pushing to `main` risks colliding with the user's work.
