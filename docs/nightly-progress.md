@@ -1,5 +1,13 @@
 # Maaden CDE — Nightly Dev Progress
 
+## 2026-07-21 (03:44 PM AST) — session fired outside window; stood down
+- Nightly session invoked at **03:44 PM AST Tuesday**, ~10.75 h past the 5:00 AM hard stop (intended window 1:00–5:00 AM). Yet another out-of-window firing (2026-07-09, 07-14, 07-16, 07-17) — the schedule trigger time remains misconfigured; it keeps firing in afternoon/morning user hours, never inside 1–5 AM.
+- Per the hard-stop rule, did **not** start new work: no `npm install`, no `db:reset`, no build, no app commits, no app push. 3:44 PM is active user hours — `db:reset` would wipe live DB state and pushing to `main` risks colliding with the user's work.
+- Working tree has uncommitted user edits under `RFQ Doc/` (pricing xlsx modify/delete/add, Security & Assurance pptx, deleted CDE Demo Deck assets, new `2026.07.06 Quotation/`, `2026.07.21 Client Submission Pack/`, `New info/`, and Rev A fee proposal docx) — left untouched (pricing/commercial + presentation docs off-limits).
+- Repo state on entry: branch `main`, HEAD `6911221` (prior stand-down note). README build status: **S1–S7 all ✅** (S7 AI: standards RAG + datasheet classification, degrades gracefully on empty `ANTHROPIC_API_KEY`).
+- Roadmap next item unchanged: **demo-polish backlog** — empty/loading/error states; optional deeper AR i18n coverage (Asset Detail, Publish, Governance inner strings). Seed scaling to plan targets already done as of 2026-07-14.
+- **Next run:** if within the 1–5 AM window, proceed with the demo-polish backlog per the schedule.
+
 ## 2026-07-17 (07:23 AM AST) — session fired outside window; stood down
 - Nightly session invoked at **07:23 AM AST Friday**, ~2.4 h past the 5:00 AM hard stop (intended window 1:00–5:00 AM). Fourth consecutive out-of-window firing (2026-07-09, 2026-07-14, 2026-07-16) — the schedule's trigger time is misconfigured and should be fixed to fire inside 1–5 AM.
 - Per the hard-stop rule, did **not** start new work: no `npm install`, no `db:reset`, no build, no app commits, no app push. 07:23 AM is active user hours — `db:reset` would wipe live DB state and pushing to `main` risks colliding with the user's work.
