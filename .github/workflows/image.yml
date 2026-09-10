@@ -1,0 +1,73 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Build the Maaden CDE image and push it to GHCR.
+#
+# The app used to run only as `npm run dev` on a developer's machine, which
+# meant the XDHouse.AI Apps card could not open it for anybody else. This
+# publishes an image the platform's VPS pulls alongside its own services.
+#
+# Only fires when the app itself changes. Everything under RFQ Doc/ that is
+# not the app is commercial and client material; rebuilding an image because
+# somebody edited a spreadsheet would be noise.
+#
+# Consumed by docker-compose.yml in the XDHouse.AI repo as:
+#   ghcr.io/xdh-angelbalilo/maaden-cde:latest
+# ─────────────────────────────────────────────────────────────────────────────
+name: Maaden CDE image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "RFQ Doc/maaden-cde-sample/**"
+      - ".github/workflows/image.yml"
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve image tags
+        id: meta
+        run: |
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          SHA=${GITHUB_SHA::12}
+          echo "pinned=ghcr.io/${OWNER}/maaden-cde:${SHA}" >> $GITHUB_OUTPUT
+          echo "latest=ghcr.io/${OWNER}/maaden-cde:latest" >> $GITHUB_OUTPUT
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build + push
+        uses: docker/build-push-action@v6
+        with:
+          # The app is not at the repo root, so the build context is the app
+          # directory. Nothing outside it is needed, and pointing the context
+          # at the root would ship the client documents into the image.
+          context: "RFQ Doc/maaden-cde-sample"
+          file: "RFQ Doc/maaden-cde-sample/Dockerfile"
+          push: true
+          build-args: |
+            GIT_SHA=${{ github.sha }}
+            BUILT_AT=${{ github.event.repository.updated_at }}
+          tags: |
+            ${{ steps.meta.outputs.pinned }}
+            ${{ steps.meta.outputs.latest }}
+          cache-from: type=gha,scope=maaden
+          cache-to: type=gha,scope=maaden,mode=max
+
+      - name: What was published
+        run: |
+          echo "pushed ${{ steps.meta.outputs.pinned }}"
+          echo "pushed ${{ steps.meta.outputs.latest }}"
+          echo "The VPS pulls :latest via docker-compose.yml in the XDHouse.AI repo."
