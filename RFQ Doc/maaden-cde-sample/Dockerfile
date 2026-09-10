@@ -61,7 +61,11 @@ RUN addgroup --system --gid 1001 nodejs \
 
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static     ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/public           ./public
+# No public/ directory here, unlike most Next apps and unlike the platform's
+# apps/web. COPY has no conditional form and fails the build outright on a
+# missing source, so this is an absence to respect rather than paper over.
+# If static assets are ever added, restore:
+#   COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 # The schema and seed travel with the image so the database can be built or
 # reset from a running container. They are read by scripts/db-reset.mjs at
