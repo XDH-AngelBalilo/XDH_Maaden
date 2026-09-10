@@ -126,7 +126,7 @@ INSERT INTO validation_rules (family,name,expression,severity) VALUES
 INSERT INTO publish_targets (system_name,family,protocol,status) VALUES
 ('Oracle Aconex','Document Management','REST/OAuth2','connected'),
 ('Primavera P6 EPPM','Engineering Management','REST','connected'),
-('SAP S/4HANA','Operational & Relational DBs','OData','queued'),
+('Oracle ERP Fusion','Operational & Relational DBs','REST','queued'),
 ('AVEVA PI System','Field & Data Acquisition','PI Web API','planned'),
 ('Microsoft EPM','Engineering Management','REST','connected'),
 ('Azure AD','Engineering Management','SAML 2.0','connected'),

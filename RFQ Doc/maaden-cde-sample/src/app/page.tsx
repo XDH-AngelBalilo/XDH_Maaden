@@ -174,7 +174,7 @@ export default async function Dashboard() {
         <div className="note">
           Roadmap alignment: this app = Module <b>M1 CDE + Engineering Data Hub</b>{" "}
           (Master Data Registry slice, task T-173) · Gate <b>G4 (W24)</b> evidence
-          scope · stack per roadmap: Next.js + TypeScript + Tailwind + Postgres.
+          scope · built on a modern, open web and database stack.
         </div>
 
         <div className="card">

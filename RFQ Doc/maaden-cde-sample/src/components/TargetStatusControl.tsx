@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { api } from "@/lib/paths";
 
 const STATUSES = ["connected", "queued", "planned"];
 
@@ -24,7 +25,7 @@ export default function TargetStatusControl({
   async function set(next: string) {
     if (next === status || busy) return;
     setBusy(true);
-    await fetch(`/api/v1/publish/targets/${id}`, {
+    await fetch(api(`/api/v1/publish/targets/${id}`), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: next }),

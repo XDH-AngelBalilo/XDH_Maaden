@@ -6,6 +6,7 @@ import PublishQueue from "@/components/PublishQueue";
 import TargetStatusControl from "@/components/TargetStatusControl";
 import { tServer } from "@/lib/i18n";
 import { getSession, canApprove } from "@/lib/auth";
+import { api } from "@/lib/paths";
 
 export const dynamic = "force-dynamic";
 
@@ -70,8 +71,8 @@ export default async function PublishHub({
           Client vision image 4 — CDE at the centre, publishing governed asset data
           to 6 system families. Click a family in the map to drill into its target
           systems and publish activity. Sample uses a publish simulator; production
-          covers the 10 Master Roadmap integrations: Aconex · Primavera P6 · SAP
-          S/4HANA · AVEVA PI · MS EPM · Azure AD · ADFS · SIEM · Outlook · ServiceNow.
+          covers the 10 Master Roadmap integrations: Aconex · Primavera P6 · Oracle
+          ERP Fusion · AVEVA PI · MS EPM · Azure AD · ADFS · SIEM · Outlook · ServiceNow.
         </div>
         <div className="grid2">
           <div>
@@ -191,7 +192,7 @@ export default async function PublishHub({
                   </tr>
                   <tr>
                     <td className="mono">
-                      <a href="/api/v1/openapi.json" className="underline" target="_blank">
+                      <a href={api("/api/v1/openapi.json")} className="underline" target="_blank">
                         GET /api/v1/openapi.json
                       </a>
                     </td>
@@ -202,8 +203,8 @@ export default async function PublishHub({
                 </tbody>
               </table>
               <div className="small mt-2">
-                Production: WAF + API gateway, per-system API keys, logs to Azure
-                Sentinel SIEM.
+                Production: WAF + API gateway, per-system API keys, logs to the
+                SIEM.
               </div>
             </div>
           </div>

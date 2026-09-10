@@ -4,12 +4,17 @@ import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import pg from "pg";
-import dotenv from "dotenv";
+
+// Optional: present for `npm run db:reset` on a developer machine, absent from
+// the production standalone tree, where DATABASE_URL comes from the container
+// environment instead. Importing it unconditionally made this command
+// unrunnable in the very place it is most needed.
+const dotenv = await import("dotenv").then(m => m.default).catch(() => null);
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 for (const f of [".env.local", ".env"]) {
   const p = join(root, f);
-  if (existsSync(p)) dotenv.config({ path: p });
+  if (dotenv && existsSync(p)) dotenv.config({ path: p });
 }
 
 const url =

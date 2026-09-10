@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { api } from "@/lib/paths";
 
 export default function PublishPanel({
   targets,
@@ -26,7 +27,7 @@ export default function PublishPanel({
     if (!tag || selected.length === 0) return;
     setBusy(true);
     setResult("");
-    const res = await fetch("/api/v1/publish", {
+    const res = await fetch(api("/api/v1/publish"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ tag, target_ids: selected }),

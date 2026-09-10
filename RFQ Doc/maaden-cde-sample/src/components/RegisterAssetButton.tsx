@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { makeT, type Locale } from "@/lib/i18n-dict";
+import { api } from "@/lib/paths";
 
 interface Option {
   id: number;
@@ -32,7 +33,7 @@ export default function RegisterAssetButton({
 
   useEffect(() => {
     if (!open) return;
-    fetch("/api/v1/templates")
+    fetch(api("/api/v1/templates"))
       .then((r) => r.json())
       .then((rows) =>
         setTemplates(
@@ -43,7 +44,7 @@ export default function RegisterAssetButton({
           }))
         )
       );
-    fetch("/api/v1/hierarchy")
+    fetch(api("/api/v1/hierarchy"))
       .then((r) => r.json())
       .then((rows) =>
         setNodes(rows.map((h: any) => ({ id: h.id, label: `${h.code} — ${h.name} (${h.level})` })))
@@ -53,7 +54,7 @@ export default function RegisterAssetButton({
   async function submit() {
     setBusy(true);
     setError("");
-    const res = await fetch("/api/v1/assets", {
+    const res = await fetch(api("/api/v1/assets"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

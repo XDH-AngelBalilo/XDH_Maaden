@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { api } from "@/lib/paths";
 
 const STATUSES = ["Draft", "Review", "Approved", "Superseded"];
 
@@ -18,7 +19,7 @@ export default function TemplateStatusControl({
   async function set(next: string) {
     if (next === status) return;
     setBusy(true);
-    await fetch(`/api/v1/templates/${code}`, {
+    await fetch(api(`/api/v1/templates/${code}`), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: next }),

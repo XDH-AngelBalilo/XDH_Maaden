@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { api } from "@/lib/paths";
 
 /** Inline value/UoM editor rendered as two <td> cells. Enter saves. */
 export default function PropertyEditor({
@@ -26,7 +27,7 @@ export default function PropertyEditor({
   async function save() {
     if (!dirty || busy) return;
     setBusy(true);
-    await fetch(`/api/v1/assets/${tag}/values`, {
+    await fetch(api(`/api/v1/assets/${tag}/values`), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

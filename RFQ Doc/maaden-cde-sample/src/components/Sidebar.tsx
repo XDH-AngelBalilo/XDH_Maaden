@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import type { SessionUser } from "@/lib/auth";
 import { makeT, type Locale } from "@/lib/i18n-dict";
+import { api } from "@/lib/paths";
 
 const NAV = [
   { href: "/", icon: "◧", key: "nav.dash" },
@@ -38,7 +39,7 @@ export default function Sidebar({
   async function switchUser(username: string) {
     if (username === user.username) return;
     setBusy(true);
-    await fetch("/api/v1/auth/switch", {
+    await fetch(api("/api/v1/auth/switch"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username }),
@@ -49,7 +50,7 @@ export default function Sidebar({
 
   async function toggleLocale() {
     setBusy(true);
-    await fetch("/api/v1/locale", {
+    await fetch(api("/api/v1/locale"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ locale: locale === "ar" ? "en" : "ar" }),

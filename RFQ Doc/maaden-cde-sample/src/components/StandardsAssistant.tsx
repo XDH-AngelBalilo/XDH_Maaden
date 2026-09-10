@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { makeT, type Locale } from "@/lib/i18n-dict";
+import { api } from "@/lib/paths";
 
 export default function StandardsAssistant({
   locale = "en",
@@ -24,7 +25,7 @@ export default function StandardsAssistant({
     setAnswer(null);
     setRefs([]);
     try {
-      const res = await fetch("/api/v1/ai/standards", {
+      const res = await fetch(api("/api/v1/ai/standards"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),

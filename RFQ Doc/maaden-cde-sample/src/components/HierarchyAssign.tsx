@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { api } from "@/lib/paths";
 
 export default function HierarchyAssign({
   tag,
@@ -18,7 +19,7 @@ export default function HierarchyAssign({
   async function assign(id: string) {
     if (!id || Number(id) === current) return;
     setBusy(true);
-    await fetch(`/api/v1/assets/${tag}/hierarchy`, {
+    await fetch(api(`/api/v1/assets/${tag}/hierarchy`), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ hierarchy_id: Number(id) }),

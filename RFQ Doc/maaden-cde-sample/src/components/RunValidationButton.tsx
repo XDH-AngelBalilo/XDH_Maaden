@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { makeT, type Locale } from "@/lib/i18n-dict";
+import { api } from "@/lib/paths";
 
 export default function RunValidationButton({
   locale = "en",
@@ -15,7 +16,7 @@ export default function RunValidationButton({
 
   async function run() {
     setBusy(true);
-    await fetch("/api/v1/validation/run", { method: "POST" });
+    await fetch(api("/api/v1/validation/run"), { method: "POST" });
     setBusy(false);
     router.refresh();
   }

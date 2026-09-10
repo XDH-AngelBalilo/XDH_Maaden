@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { makeT, type Locale } from "@/lib/i18n-dict";
+import { api } from "@/lib/paths";
 
 type ClassifyResult = {
   asset_class: string | null;
@@ -37,7 +38,7 @@ export default function DatasheetClassifier({
     setError(null);
     setResult(null);
     try {
-      const res = await fetch("/api/v1/ai/classify", {
+      const res = await fetch(api("/api/v1/ai/classify"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),

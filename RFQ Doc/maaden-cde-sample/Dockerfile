@@ -77,7 +77,15 @@ COPY --from=builder --chown=nextjs:nodejs /app/scripts          ./scripts
 USER nextjs
 EXPOSE 3000
 
+# The app is mounted on /maaden (see next.config.mjs), so / is a 404 here and
+# probing it would mark a perfectly healthy container unhealthy forever.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD wget -qO- http://127.0.0.1:3000/ >/dev/null 2>&1 || exit 1
+  CMD wget -qO- http://127.0.0.1:3000/maaden >/dev/null 2>&1 || exit 1
 
-CMD ["node", "server.js"]
+# Build the database if it is empty, then serve. db-init is idempotent and
+# leaves an existing schema untouched, so this is safe on every restart; it is
+# here so a fresh volume produces a populated demo without anybody having to
+# SSH in and remember a command. Its failure is logged but does not stop the
+# server: an app reporting a database error is diagnosable, a crash-looping
+# container is a blank page and logs nobody thinks to read.
+CMD ["sh", "-c", "node scripts/db-init.mjs || true; exec node server.js"]
